@@ -18,15 +18,6 @@ Built with **Next.js 16**, **React 19**, **TypeScript**, **Tailwind CSS 4**, **M
 - Custom cursor (desktop)
 - SEO: dynamic metadata, JSON-LD, sitemap, robots.txt
 
-### Creator Studio (Hidden)
-- **Secret access:** Click logo 5 times within 2 seconds → "Enter Creator Access" modal
-- **Secondary access:** `/vault` (not linked in navigation)
-- **Keyboard shortcut:** `Cmd/Ctrl + Shift + K` (undocumented)
-- Full dashboard: trips, destinations, stories, photos, videos, map, media, settings
-- Tiptap rich-text editor with autosave
-- Media library with upload support
-- Draft/publish workflow
-
 ## Project Structure
 
 ```
