@@ -1,26 +1,237 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f5;
+  --foreground: #1a1a1a;
+  --muted: #6b6560;
+  --muted-bg: #f0ebe4;
+  --sand: #e8e0d4;
+  --ivory: #faf8f5;
+  --charcoal: #1a1a1a;
+  --ocean: #1a4d5c;
+  --teal: #2d6a6a;
+  --sunset: #c4704a;
+  --gold: #c9a962;
+  --border: rgba(26, 26, 26, 0.08);
+  --card: #ffffff;
+  --overlay: rgba(26, 26, 26, 0.4);
+  --header-bg: rgba(250, 248, 245, 0.85);
+  --cursor-size: 12px;
+}
+
+.dark {
+  --background: #141820;
+  --foreground: #f5f0ea;
+  --muted: #a09a94;
+  --muted-bg: #1e2430;
+  --sand: #252b38;
+  --ivory: #141820;
+  --charcoal: #f5f0ea;
+  --ocean: #3d8a9e;
+  --teal: #4a9090;
+  --sunset: #d4845a;
+  --gold: #d4b872;
+  --border: rgba(245, 240, 234, 0.1);
+  --card: #1a2030;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --header-bg: rgba(20, 24, 32, 0.9);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-muted-bg: var(--muted-bg);
+  --color-sand: var(--sand);
+  --color-ivory: var(--ivory);
+  --color-charcoal: var(--charcoal);
+  --color-ocean: var(--ocean);
+  --color-teal: var(--teal);
+  --color-sunset: var(--sunset);
+  --color-gold: var(--gold);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --font-display: var(--font-dm-serif);
+  --font-sans: var(--font-manrope);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: var(--font-dm-serif), Georgia, serif;
+}
+
+::selection {
+  background: var(--ocean);
+  color: white;
+}
+
+/* Custom cursor — desktop only */
+@media (pointer: fine) {
+  body.custom-cursor,
+  body.custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* Editorial prose for stories */
+.prose-editorial {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 1.125rem;
+  line-height: 1.85;
+  color: var(--foreground);
+}
+
+.prose-editorial .lead {
+  font-size: 1.35rem;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.prose-editorial h2 {
+  font-family: var(--font-dm-serif), Georgia, serif;
+  font-size: 2rem;
+  margin: 3rem 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.prose-editorial blockquote {
+  border-left: 2px solid var(--sunset);
+  padding-left: 1.5rem;
+  margin: 2.5rem 0;
+  font-family: var(--font-dm-serif), Georgia, serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.prose-editorial figure {
+  margin: 3rem -4rem;
+}
+
+@media (max-width: 768px) {
+  .prose-editorial figure {
+    margin: 2rem 0;
+  }
+}
+
+.prose-editorial figure img {
+  width: 100%;
+  border-radius: 2px;
+}
+
+.prose-editorial figcaption {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.75rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.prose-editorial ul {
+  list-style: none;
+  padding: 0;
+}
+
+.prose-editorial ul li {
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.prose-editorial ul li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--sunset);
+}
+
+/* Mapbox overrides */
+.mapboxgl-popup-content {
+  background: var(--card) !important;
+  border-radius: 4px !important;
+  padding: 0 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+}
+
+.mapboxgl-popup-tip {
+  display: none !important;
+}
+
+/* Tiptap editor */
+.tiptap {
+  outline: none;
+  min-height: 300px;
+}
+
+.tiptap p {
+  margin-bottom: 1rem;
+}
+
+.tiptap h2 {
+  font-family: var(--font-dm-serif), Georgia, serif;
+  font-size: 1.5rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.tiptap blockquote {
+  border-left: 2px solid var(--sunset);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sand);
+  border-radius: 3px;
+}
+
+/* View transitions */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
 }
