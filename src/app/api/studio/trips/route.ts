@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStudioAccess, jsonError } from "@/lib/studio/api";
-import { deleteStory, persistStory } from "@/lib/studio/persist";
+import { deleteTrip, persistTrip } from "@/lib/studio/persist";
 
 export async function POST(request: NextRequest) {
   const denied = await requireStudioAccess(request);
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    await persistStory(body);
+    await persistTrip(body);
     return NextResponse.json({ success: true });
   } catch (error) {
     return jsonError(error instanceof Error ? error.message : "Save failed");
@@ -23,7 +23,7 @@ export async function DELETE(request: NextRequest) {
   if (!slug) return jsonError("Missing slug", 400);
 
   try {
-    await deleteStory(slug);
+    await deleteTrip(slug);
     return NextResponse.json({ success: true });
   } catch (error) {
     return jsonError(error instanceof Error ? error.message : "Delete failed");

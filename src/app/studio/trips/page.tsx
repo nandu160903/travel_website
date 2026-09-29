@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getTrips } from "@/lib/data/queries";
+import { getStudioTrips } from "@/lib/data/studio-queries";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 
 export default async function StudioTripsPage() {
-  const trips = await getTrips();
+  const trips = await getStudioTrips();
 
   return (
     <div className="p-8 md:p-10 max-w-5xl">
@@ -21,9 +21,10 @@ export default async function StudioTripsPage() {
 
       <div className="space-y-2">
         {trips.map((trip) => (
-          <div
+          <Link
             key={trip.id}
-            className="flex items-center justify-between p-4 border border-border"
+            href={`/studio/trips/${trip.slug}`}
+            className="flex items-center justify-between p-4 border border-border hover:border-ocean transition-colors"
           >
             <div>
               <p className="font-medium">{trip.title}</p>
@@ -34,7 +35,7 @@ export default async function StudioTripsPage() {
             <Badge variant={trip.status === "published" ? "accent" : "muted"}>
               {trip.status}
             </Badge>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

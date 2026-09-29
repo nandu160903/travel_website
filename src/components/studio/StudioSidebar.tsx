@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/utils";
 
 const navItems = [
   { href: "/studio", label: "Overview", icon: LayoutDashboard },
@@ -35,8 +36,12 @@ export function StudioSidebar() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    if (isSupabaseConfigured()) {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } else {
+      await fetch("/api/studio/auth", { method: "DELETE" });
+    }
     router.push("/");
     router.refresh();
   };
@@ -45,13 +50,15 @@ export function StudioSidebar() {
     <aside className="w-64 bg-card border-r border-border flex flex-col h-screen sticky top-0">
       <div className="p-6 border-b border-border">
         <p className="font-display text-xl">Studio</p>
-        <p className="text-[10px] uppercase tracking-widest text-muted mt-1">Creator Mode</p>
+        <p className="text-[10px] uppercase tracking-widest text-muted mt-1">Content Admin</p>
       </div>
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const active = pathname === item.href || (item.href !== "/studio" && pathname.startsWith(item.href));
+          const active =
+            pathname === item.href ||
+            (item.href !== "/studio" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href}

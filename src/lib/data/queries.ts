@@ -12,7 +12,17 @@ import type {
   Trip,
   Video,
 } from "@/types";
+import { readCmsStore, cmsStoreHasContent } from "@/lib/cms/store";
 import { isSupabaseConfigured } from "@/lib/utils";
+import {
+  mapDestination,
+  mapCity,
+  mapTrip,
+  mapStory,
+  mapPhoto,
+  mapVideo,
+  mapMapLocation,
+} from "./mappers";
 import {
   demoCities,
   demoDashboardStats,
@@ -32,12 +42,24 @@ async function getSupabaseClient() {
   return createClient();
 }
 
+async function getActiveCmsStore() {
+  const store = await readCmsStore();
+  return store && cmsStoreHasContent(store) ? store : null;
+}
+
 export async function getSiteSettings(): Promise<SiteSettings> {
   const supabase = await getSupabaseClient();
-  if (!supabase) return demoSettings;
+  if (!supabase) {
+    const store = await getActiveCmsStore();
+    return store?.siteSettings ?? demoSettings;
+  }
 
   const { data } = await supabase.from("site_settings").select("*").single();
-  if (!data) return demoSettings;
+  if (!data) {
+    const store = await getActiveCmsStore();
+    if (store?.siteSettings) return store.siteSettings;
+    return demoSettings;
+  }
 
   return {
     siteTitle: data.site_title,
@@ -55,7 +77,11 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
 export async function getDestinations(): Promise<Destination[]> {
   const supabase = await getSupabaseClient();
-  if (!supabase) return demoDestinations.filter((d) => d.status === "published");
+  if (!supabase) {
+    const store = await getActiveCmsStore();
+    const list = store?.destinations ?? demoDestinations;
+    return list.filter((d) => d.status === "published");
+  }
 
   const { data } = await supabase
     .from("destinations")
@@ -63,7 +89,11 @@ export async function getDestinations(): Promise<Destination[]> {
     .eq("status", "published")
     .order("name");
 
-  if (!data?.length) return demoDestinations.filter((d) => d.status === "published");
+  if (!data?.length) {
+    const store = await getActiveCmsStore();
+    const list = store?.destinations ?? demoDestinations;
+    return list.filter((d) => d.status === "published");
+  }
 
   return data.map(mapDestination);
 }
@@ -71,7 +101,9 @@ export async function getDestinations(): Promise<Destination[]> {
 export async function getDestination(slug: string): Promise<Destination | null> {
   const supabase = await getSupabaseClient();
   if (!supabase) {
-    return demoDestinations.find((d) => d.slug === slug && d.status === "published") ?? null;
+    const store = await getActiveCmsStore();
+    const list = store?.destinations ?? demoDestinations;
+    return list.find((d) => d.slug === slug && d.status === "published") ?? null;
   }
 
   const { data } = await supabase
@@ -115,7 +147,11 @@ export async function getCity(
 
 export async function getTrips(): Promise<Trip[]> {
   const supabase = await getSupabaseClient();
-  if (!supabase) return demoTrips.filter((t) => t.status === "published");
+  if (!supabase) {
+    const store = await getActiveCmsStore();
+    const list = store?.trips ?? demoTrips;
+    return list.filter((t) => t.status === "published");
+  }
 
   const { data } = await supabase
     .from("trips")
@@ -123,14 +159,20 @@ export async function getTrips(): Promise<Trip[]> {
     .eq("status", "published")
     .order("start_date", { ascending: false });
 
-  if (!data?.length) return demoTrips.filter((t) => t.status === "published");
+  if (!data?.length) {
+    const store = await getActiveCmsStore();
+    const list = store?.trips ?? demoTrips;
+    return list.filter((t) => t.status === "published");
+  }
   return data.map(mapTrip);
 }
 
 export async function getTrip(slug: string): Promise<Trip | null> {
   const supabase = await getSupabaseClient();
   if (!supabase) {
-    return demoTrips.find((t) => t.slug === slug && t.status === "published") ?? null;
+    const store = await getActiveCmsStore();
+    const list = store?.trips ?? demoTrips;
+    return list.find((t) => t.slug === slug && t.status === "published") ?? null;
   }
 
   const { data } = await supabase
@@ -145,7 +187,9 @@ export async function getTrip(slug: string): Promise<Trip | null> {
 export async function getStories(category?: StoryCategory): Promise<Story[]> {
   const supabase = await getSupabaseClient();
   if (!supabase) {
-    const stories = demoStories.filter((s) => s.status === "published");
+    const store = await getActiveCmsStore();
+    const list = store?.stories ?? demoStories;
+    const stories = list.filter((s) => s.status === "published");
     return category ? stories.filter((s) => s.category === category) : stories;
   }
 
@@ -159,7 +203,9 @@ export async function getStories(category?: StoryCategory): Promise<Story[]> {
 
   const { data } = await query;
   if (!data?.length) {
-    const stories = demoStories.filter((s) => s.status === "published");
+    const store = await getActiveCmsStore();
+    const list = store?.stories ?? demoStories;
+    const stories = list.filter((s) => s.status === "published");
     return category ? stories.filter((s) => s.category === category) : stories;
   }
   return data.map(mapStory);
@@ -168,7 +214,9 @@ export async function getStories(category?: StoryCategory): Promise<Story[]> {
 export async function getStory(slug: string): Promise<Story | null> {
   const supabase = await getSupabaseClient();
   if (!supabase) {
-    return demoStories.find((s) => s.slug === slug && s.status === "published") ?? null;
+    const store = await getActiveCmsStore();
+    const list = store?.stories ?? demoStories;
+    return list.find((s) => s.slug === slug && s.status === "published") ?? null;
   }
 
   const { data } = await supabase
@@ -199,16 +247,26 @@ export async function getRelatedStories(story: Story, limit = 3): Promise<Story[
 
 export async function getPhotos(): Promise<Photo[]> {
   const supabase = await getSupabaseClient();
-  if (!supabase) return demoPhotos;
+  if (!supabase) {
+    const store = await getActiveCmsStore();
+    return store?.photos ?? demoPhotos;
+  }
 
   const { data } = await supabase.from("photos").select("*").order("taken_at", { ascending: false });
-  if (!data?.length) return demoPhotos;
+  if (!data?.length) {
+    const store = await getActiveCmsStore();
+    return store?.photos ?? demoPhotos;
+  }
   return data.map(mapPhoto);
 }
 
 export async function getVideos(): Promise<Video[]> {
   const supabase = await getSupabaseClient();
-  if (!supabase) return demoVideos.filter((v) => v.status === "published");
+  if (!supabase) {
+    const store = await getActiveCmsStore();
+    const list = store?.videos ?? demoVideos;
+    return list.filter((v) => v.status === "published");
+  }
 
   const { data } = await supabase
     .from("videos")
@@ -216,7 +274,11 @@ export async function getVideos(): Promise<Video[]> {
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
-  if (!data?.length) return demoVideos.filter((v) => v.status === "published");
+  if (!data?.length) {
+    const store = await getActiveCmsStore();
+    const list = store?.videos ?? demoVideos;
+    return list.filter((v) => v.status === "published");
+  }
   return data.map(mapVideo);
 }
 
@@ -225,7 +287,13 @@ export async function getTimeline(): Promise<TimelineEntry[]> {
 }
 
 export async function getMapLocations(): Promise<MapLocation[]> {
-  return demoMapLocations;
+  const supabase = await getSupabaseClient();
+  if (supabase) {
+    const { data } = await supabase.from("map_locations").select("*");
+    if (data?.length) return data.map(mapMapLocation);
+  }
+  const store = await getActiveCmsStore();
+  return store?.mapLocations ?? demoMapLocations;
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
@@ -306,126 +374,4 @@ export async function searchContent(query: string): Promise<SearchResult[]> {
   }
 
   return results.slice(0, 12);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapDestination(row: any): Destination {
-  return {
-    id: row.id,
-    slug: row.slug,
-    name: row.name,
-    country: row.country,
-    region: row.region,
-    description: row.description,
-    coverImage: row.cover_image,
-    coordinates: row.coordinates,
-    featured: row.featured,
-    storyCount: row.story_count ?? 0,
-    photoCount: row.photo_count ?? 0,
-    status: row.status,
-    seoTitle: row.seo_title,
-    seoDescription: row.seo_description,
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapCity(row: any): City {
-  return {
-    id: row.id,
-    slug: row.slug,
-    name: row.name,
-    destinationId: row.destination_id,
-    destinationSlug: row.destinations?.slug ?? row.destination_slug,
-    description: row.description,
-    coverImage: row.cover_image,
-    coordinates: row.coordinates,
-    storyCount: row.story_count ?? 0,
-    photoCount: row.photo_count ?? 0,
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapTrip(row: any): Trip {
-  return {
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    country: row.country,
-    cities: row.cities ?? [],
-    startDate: row.start_date,
-    endDate: row.end_date,
-    coverImage: row.cover_image,
-    description: row.description,
-    category: row.category,
-    coordinates: row.coordinates,
-    status: row.status,
-    featured: row.featured,
-    destinationId: row.destination_id,
-    storyCount: row.story_count ?? 0,
-    photoCount: row.photo_count ?? 0,
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapStory(row: any): Story {
-  return {
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    excerpt: row.excerpt,
-    content: row.content,
-    coverImage: row.cover_image,
-    destinationId: row.destination_id,
-    destinationSlug: row.destinations?.slug ?? row.destination_slug,
-    destinationName: row.destinations?.name ?? row.destination_name,
-    cityName: row.city_name,
-    tripId: row.trip_id,
-    publishedAt: row.published_at,
-    readingTime: row.reading_time,
-    category: row.category,
-    tags: row.tags ?? [],
-    featured: row.featured,
-    status: row.status,
-    gallery: row.gallery,
-    videoUrl: row.video_url,
-    location: row.location,
-    seoTitle: row.seo_title,
-    seoDescription: row.seo_description,
-    ogImage: row.og_image,
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapPhoto(row: any): Photo {
-  return {
-    id: row.id,
-    url: row.url,
-    thumbnailUrl: row.thumbnail_url,
-    caption: row.caption,
-    location: row.location,
-    destinationSlug: row.destination_slug,
-    takenAt: row.taken_at,
-    camera: row.camera,
-    width: row.width,
-    height: row.height,
-    storyId: row.story_id,
-    tripId: row.trip_id,
-    tags: row.tags,
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapVideo(row: any): Video {
-  return {
-    id: row.id,
-    title: row.title,
-    thumbnail: row.thumbnail,
-    url: row.url,
-    embedUrl: row.embed_url,
-    duration: row.duration,
-    location: row.location,
-    destinationSlug: row.destination_slug,
-    publishedAt: row.published_at,
-    status: row.status,
-  };
 }

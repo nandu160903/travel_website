@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getStories } from "@/lib/data/queries";
+import { getStudioStories } from "@/lib/data/studio-queries";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 
 export default async function StudioStoriesPage() {
-  const stories = await getStories();
+  const stories = await getStudioStories();
 
   return (
     <div className="p-8 md:p-10 max-w-5xl">
@@ -28,21 +28,23 @@ export default async function StudioStoriesPage() {
             <Link href={`/studio/stories/${story.slug}`} className="flex-1 min-w-0">
               <p className="font-medium group-hover:text-ocean transition-colors">{story.title}</p>
               <p className="text-xs text-muted mt-1">
-                {story.destinationName} · {formatDate(story.publishedAt)}
+                {story.destinationName || "No destination"} · {story.publishedAt ? formatDate(story.publishedAt) : "Unpublished"}
               </p>
             </Link>
             <div className="flex items-center gap-3 shrink-0 ml-4">
               <Badge variant={story.status === "published" ? "accent" : "muted"}>
                 {story.status}
               </Badge>
-              <a
-                href={`/stories/${story.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs uppercase tracking-widest text-muted hover:text-ocean"
-              >
-                Preview
-              </a>
+              {story.status === "published" && (
+                <a
+                  href={`/stories/${story.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs uppercase tracking-widest text-muted hover:text-ocean"
+                >
+                  Preview
+                </a>
+              )}
             </div>
           </div>
         ))}

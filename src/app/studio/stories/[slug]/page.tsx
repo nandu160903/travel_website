@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { StoryEditor } from "@/components/studio/StoryEditor";
-import { demoStories } from "@/lib/data/demo";
+import { getStudioStory } from "@/lib/data/studio-queries";
 
 interface EditStoryPageProps {
   params: Promise<{ slug: string }>;
@@ -8,8 +8,7 @@ interface EditStoryPageProps {
 
 export default async function EditStoryPage({ params }: EditStoryPageProps) {
   const { slug } = await params;
-  const story = demoStories.find((s) => s.slug === slug);
-
+  const story = await getStudioStory(slug);
   if (!story) notFound();
 
   return (

@@ -18,12 +18,7 @@ export default function VaultPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
-      <CreatorAuthModal
-        open={open}
-        onClose={() => setOpen(false)}
-      />
-      {/* Hidden secondary access route — redirects to studio after auth */}
-      <input type="hidden" value={redirect} readOnly />
+      <CreatorAuthModal open={open} onClose={() => setOpen(false)} redirectTo={redirect} />
     </div>
   );
 }

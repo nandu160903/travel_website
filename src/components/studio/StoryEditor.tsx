@@ -35,6 +35,17 @@ export function StoryEditor({ initialStory }: StoryEditorProps) {
     void html;
   }, []);
 
+  const handleDelete = async () => {
+    if (!initialStory || !confirm("Delete this story?")) return;
+    const res = await fetch(`/api/studio/stories?slug=${encodeURIComponent(slug)}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      router.push("/studio/stories");
+      router.refresh();
+    }
+  };
+
   const handleSave = async (newStatus: "draft" | "published") => {
     setSaving(true);
     setStatus(newStatus);
@@ -119,6 +130,11 @@ export function StoryEditor({ initialStory }: StoryEditorProps) {
           <Button size="sm" onClick={() => handleSave("published")} disabled={saving}>
             Publish
           </Button>
+          {initialStory && (
+            <Button variant="ghost" size="sm" onClick={handleDelete} className="text-sunset">
+              Delete
+            </Button>
+          )}
         </div>
       </div>
     </div>

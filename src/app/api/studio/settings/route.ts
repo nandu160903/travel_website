@@ -1,38 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isSupabaseConfigured } from "@/lib/utils";
-
-async function verifyCreator() {
-  if (!isSupabaseConfigured()) return true; // Allow in demo mode
-  const { createClient } = await import("@/lib/supabase/server");
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  return Boolean(user);
-}
+import type { SiteSettings, SocialLink } from "@/types";
+import { requireStudioAccess, jsonError } from "@/lib/studio/api";
+import { persistSiteSettings } from "@/lib/studio/persist";
 
 export async function PUT(request: NextRequest) {
-  if (!(await verifyCreator())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = await requireStudioAccess(request);
+  if (denied) return denied;
 
-  const body = await request.json();
+  try {
+    const body = await request.json();
+    const socialLinks: SocialLink[] = [];
+    if (body.instagram) socialLinks.push({ platform: "instagram", url: body.instagram });
+    if (body.facebook) socialLinks.push({ platform: "facebook", url: body.facebook });
+    if (body.youtube) socialLinks.push({ platform: "youtube", url: body.youtube });
 
-  if (isSupabaseConfigured()) {
-    const { createClient } = await import("@/lib/supabase/server");
-    const supabase = await createClient();
-
-    await supabase.from("site_settings").upsert({
-      site_title: body.siteTitle,
-      site_description: body.siteDescription,
+    const settings: SiteSettings = {
+      siteTitle: body.siteTitle,
+      siteDescription: body.siteDescription,
       bio: body.bio,
+      profilePhoto: body.profilePhoto ?? "",
+      heroImage: body.heroImage,
+      heroVideo: body.heroVideo,
       email: body.email,
-      hero_image: body.heroImage,
-      social_links: [
-        { platform: "instagram", url: body.instagram },
-        { platform: "facebook", url: body.facebook },
-      ],
-      updated_at: new Date().toISOString(),
-    });
-  }
+      socialLinks: body.socialLinks ?? socialLinks,
+      seoDefaults: body.seoDefaults ?? {
+        title: body.siteTitle,
+        description: body.siteDescription,
+        ogImage: body.heroImage,
+      },
+      featuredDestinationIds: body.featuredDestinationIds ?? [],
+    };
 
-  return NextResponse.json({ success: true });
+    await persistSiteSettings(settings);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return jsonError(error instanceof Error ? error.message : "Save failed");
+  }
 }

@@ -20,6 +20,9 @@
 # production
 /build
 
+# local CMS content (created when using admin without Supabase)
+/data/cms-store.json
+
 # misc
 .DS_Store
 *.pem
