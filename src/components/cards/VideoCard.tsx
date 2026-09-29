@@ -27,20 +27,20 @@ export function VideoCard({ video }: VideoCardProps) {
             className="object-cover group-hover:scale-105 transition-transform duration-700"
             sizes="50vw"
           />
-          <div className="absolute inset-0 bg-charcoal/30 group-hover:bg-charcoal/20 transition-colors" />
+          <div className="absolute inset-0 bg-tone-dark/30 group-hover:bg-tone-dark/20 transition-colors" />
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
               variants={{
                 rest: { scale: 1 },
                 hover: { scale: 1.1 },
               }}
-              className="w-14 h-14 rounded-full border border-white/80 flex items-center justify-center"
+              className="w-14 h-14 rounded-full border border-tone-light/80 flex items-center justify-center"
             >
-              <Play size={20} className="text-white ml-1" fill="white" />
+              <Play size={20} className="text-tone-light ml-1" fill="currentColor" />
             </motion.div>
           </div>
           {video.duration && (
-            <span className="absolute bottom-3 right-3 text-[10px] uppercase tracking-widest text-white bg-charcoal/60 px-2 py-1">
+            <span className="absolute bottom-3 right-3 text-[10px] uppercase tracking-widest text-tone-light bg-tone-dark/60 px-2 py-1">
               {video.duration}
             </span>
           )}

@@ -28,11 +28,7 @@ export function NewsletterForm() {
   };
 
   if (status === "success") {
-    return (
-      <p className="text-sm text-ivory/70 dark:text-muted">
-        Thank you — you&apos;re on the list.
-      </p>
-    );
+    return <p className="text-sm text-muted">Thank you — you&apos;re on the list.</p>;
   }
 
   return (
@@ -43,9 +39,9 @@ export function NewsletterForm() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Your email"
         required
-        className="flex-1 px-4 py-2 bg-ivory/10 dark:bg-muted-bg border border-ivory/20 dark:border-border text-ivory dark:text-foreground placeholder:text-ivory/40 dark:placeholder:text-muted text-sm focus:outline-none focus:border-ocean"
+        className="flex-1 px-4 py-2.5 bg-background border border-border text-foreground placeholder:text-muted text-sm focus:outline-none focus:border-gold"
       />
-      <Button type="submit" size="sm" disabled={status === "loading"}>
+      <Button type="submit" size="sm" variant="primary" disabled={status === "loading"}>
         {status === "loading" ? "..." : "Subscribe"}
       </Button>
     </form>

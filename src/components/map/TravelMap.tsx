@@ -30,6 +30,7 @@ export function TravelMap({
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [filter, setFilter] = useState<MapFilter>("all");
   const [mapReady, setMapReady] = useState(false);
+  const mapStyle = "mapbox://styles/mapbox/dark-v11";
 
   const filtered =
     filter === "all" ? locations : locations.filter((l) => l.type === filter);
@@ -41,7 +42,7 @@ export function TravelMap({
 
     const map = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/light-v11",
+      style: mapStyle,
       center: [20, 30],
       zoom: 1.5,
       projection: "globe",
@@ -60,8 +61,9 @@ export function TravelMap({
     return () => {
       map.remove();
       mapRef.current = null;
+      setMapReady(false);
     };
-  }, [interactive]);
+  }, [interactive, mapStyle]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -72,7 +74,7 @@ export function TravelMap({
     filtered.forEach((loc) => {
       const el = document.createElement("div");
       el.className =
-        "w-3 h-3 rounded-full bg-ocean border-2 border-white shadow-lg cursor-pointer hover:scale-150 transition-transform";
+        "w-3 h-3 rounded-full bg-ocean border-2 border-tone-light shadow-lg cursor-pointer hover:scale-150 transition-transform";
       el.addEventListener("click", () => {
         setSelected(loc);
         map.flyTo({
@@ -102,7 +104,7 @@ export function TravelMap({
   if (!siteConfig.mapboxToken) {
     return (
       <div
-        className={cn("relative bg-muted-bg flex items-center justify-center", className)}
+        className={cn("relative bg-muted-bg flex items-center justify-center border border-border", className)}
         style={{ height }}
       >
         <div className="text-center p-8">
@@ -115,7 +117,7 @@ export function TravelMap({
               <button
                 key={loc.id}
                 onClick={() => setSelected(loc)}
-                className="text-left p-3 border border-border hover:border-ocean transition-colors"
+                className="text-left p-3 border border-border bg-card hover:border-ocean transition-colors"
               >
                 <p className="text-xs uppercase tracking-widest text-muted">{loc.type}</p>
                 <p className="font-medium text-sm mt-1">{loc.name}</p>
@@ -134,7 +136,7 @@ export function TravelMap({
   }
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative border border-border", className)} data-cursor="explore">
       <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
         {filters.map((f) => (
           <button
@@ -143,7 +145,7 @@ export function TravelMap({
             className={cn(
               "px-3 py-1.5 text-[10px] uppercase tracking-widest transition-colors",
               filter === f.key
-                ? "bg-ocean text-white"
+                ? "bg-ocean text-tone-light"
                 : "bg-card/90 backdrop-blur text-muted hover:text-foreground border border-border"
             )}
           >
@@ -193,7 +195,7 @@ function MapPopup({
         />
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 w-8 h-8 bg-charcoal/50 text-white flex items-center justify-center text-sm"
+          className="absolute top-2 right-2 w-8 h-8 bg-tone-dark/60 text-tone-light flex items-center justify-center text-sm"
           aria-label="Close"
         >
           ×
@@ -208,7 +210,7 @@ function MapPopup({
         <p className="text-sm text-muted mt-3 line-clamp-2">{location.description}</p>
         <Link
           href={href}
-          className="inline-block mt-4 text-xs uppercase tracking-widest text-ocean hover:text-teal transition-colors"
+          className="inline-block mt-4 text-xs uppercase tracking-widest text-ocean hover:text-gold transition-colors"
         >
           Explore →
         </Link>

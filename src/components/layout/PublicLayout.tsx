@@ -22,6 +22,7 @@ export async function PublicLayout({
         siteTitle={settings.siteTitle}
         socialLinks={socialLinks}
         transparent={transparentHeader}
+        heroImage={settings.heroImage}
       />
       <main className="flex-1">{children}</main>
       <Footer

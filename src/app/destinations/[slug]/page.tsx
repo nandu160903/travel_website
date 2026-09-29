@@ -70,14 +70,14 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-charcoal/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-tone-dark/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 max-w-7xl mx-auto">
           <Badge variant="accent">{destination.region ?? destination.country}</Badge>
-          <h1 className="font-display text-5xl md:text-8xl text-white mt-4 leading-none">
+          <h1 className="font-display text-5xl md:text-8xl text-tone-light mt-4 leading-none">
             {destination.name}
           </h1>
           {destination.coordinates && (
-            <p className="text-white/60 text-[10px] uppercase tracking-widest mt-4">
+            <p className="text-tone-light/60 text-[10px] uppercase tracking-widest mt-4">
               {formatCoordinates(destination.coordinates.lat, destination.coordinates.lng)}
             </p>
           )}

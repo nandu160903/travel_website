@@ -46,15 +46,15 @@ export function Lightbox({ photos, currentIndex, onClose, onNavigate }: Lightbox
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] bg-charcoal/95 flex flex-col"
+        className="fixed inset-0 z-[100] bg-tone-dark/95 flex flex-col"
       >
         <div className="flex items-center justify-between p-4 md:p-6">
-          <div className="text-white/70 text-xs uppercase tracking-widest">
+          <div className="text-tone-light/70 text-xs uppercase tracking-widest">
             {currentIndex + 1} / {photos.length}
           </div>
           <button
             onClick={onClose}
-            className="text-white/70 hover:text-white transition-colors"
+            className="text-tone-light/70 hover:text-tone-light transition-colors"
             aria-label="Close lightbox"
           >
             <X size={24} />
@@ -64,7 +64,7 @@ export function Lightbox({ photos, currentIndex, onClose, onNavigate }: Lightbox
         <div className="flex-1 relative flex items-center justify-center px-4 md:px-16">
           <button
             onClick={goPrev}
-            className="absolute left-4 md:left-8 text-white/50 hover:text-white transition-colors z-10"
+            className="absolute left-4 md:left-8 text-tone-light/50 hover:text-tone-light transition-colors z-10"
             aria-label="Previous photo"
           >
             <ChevronLeft size={32} />
@@ -90,16 +90,16 @@ export function Lightbox({ photos, currentIndex, onClose, onNavigate }: Lightbox
 
           <button
             onClick={goNext}
-            className="absolute right-4 md:right-8 text-white/50 hover:text-white transition-colors z-10"
+            className="absolute right-4 md:right-8 text-tone-light/50 hover:text-tone-light transition-colors z-10"
             aria-label="Next photo"
           >
             <ChevronRight size={32} />
           </button>
         </div>
 
-        <div className="p-4 md:p-6 text-center text-white/80">
+        <div className="p-4 md:p-6 text-center text-tone-light/80">
           {photo.caption && <p className="text-sm mb-1">{photo.caption}</p>}
-          <div className="flex items-center justify-center gap-4 text-[10px] uppercase tracking-widest text-white/50">
+          <div className="flex items-center justify-center gap-4 text-[10px] uppercase tracking-widest text-tone-light/50">
             {photo.location && <span>{photo.location}</span>}
             {photo.takenAt && <span>{photo.takenAt}</span>}
             {photo.camera && <span>{photo.camera}</span>}

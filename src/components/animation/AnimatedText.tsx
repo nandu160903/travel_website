@@ -20,16 +20,16 @@ export function AnimatedText({
 }: AnimatedTextProps) {
   const parts =
     splitBy === "line"
-      ? text.split("\n")
-      : text.split(" ");
+      ? text.split("\n").filter(Boolean)
+      : text.split(" ").filter(Boolean);
 
   return (
-    <Tag className={cn("overflow-hidden", className)}>
+    <Tag className={cn("flex flex-col gap-1 sm:gap-2", className)}>
       {parts.map((part, i) => (
-        <span key={i} className="block overflow-hidden">
+        <span key={i} className="block overflow-hidden py-0.5 leading-[1.25]">
           <motion.span
-            className="inline-block"
-            initial={{ y: "110%", opacity: 0 }}
+            className="inline-block will-change-transform"
+            initial={{ y: "100%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{
               duration: 0.8,

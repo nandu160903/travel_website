@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
 import type { Destination } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -18,63 +19,53 @@ export function DestinationCard({
   className,
 }: DestinationCardProps) {
   const sizeClasses = {
-    small: "aspect-[3/4] min-h-[280px]",
-    medium: "aspect-[4/5] min-h-[360px]",
-    large: "aspect-[16/10] min-h-[480px] md:min-h-[560px]",
+    small: "min-h-[240px]",
+    medium: "min-h-[320px]",
+    large: "min-h-[400px] md:min-h-[480px]",
   };
 
   return (
     <motion.article
-      whileHover="hover"
-      initial="rest"
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       data-cursor="view"
       className={cn("group relative overflow-hidden", sizeClasses[size], className)}
     >
       <Link href={`/destinations/${destination.slug}`} className="block absolute inset-0">
-        <motion.div
-          variants={{
-            rest: { scale: 1 },
-            hover: { scale: 1.08 },
-          }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0"
-        >
-          <Image
-            src={destination.coverImage}
-            alt={destination.name}
-            fill
-            className="object-cover"
-            sizes={size === "large" ? "70vw" : "40vw"}
-          />
-        </motion.div>
+        <Image
+          src={destination.coverImage}
+          alt={destination.name}
+          fill
+          className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
+          sizes={size === "large" ? "70vw" : "40vw"}
+        />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-tone-dark/75 via-tone-dark/15 to-transparent" />
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/60 mb-2">
+        <div className="absolute inset-0 p-5 md:p-7 flex flex-col justify-between">
+          <p className="travel-meta text-tone-light/55 self-start">
             {destination.region ?? destination.country}
           </p>
-          <motion.h3
-            variants={{
-              rest: { y: 0 },
-              hover: { y: -4 },
-            }}
-            className={cn(
-              "font-display text-white leading-none",
-              size === "large" ? "text-5xl md:text-7xl" : size === "medium" ? "text-4xl md:text-5xl" : "text-3xl"
-            )}
-          >
-            {destination.name}
-          </motion.h3>
-          <motion.p
-            variants={{
-              rest: { opacity: 0, y: 8 },
-              hover: { opacity: 1, y: 0 },
-            }}
-            className="text-white/70 text-sm mt-3 line-clamp-2"
-          >
-            {destination.storyCount} stories · {destination.photoCount} photos
-          </motion.p>
+
+          <div>
+            <div className="flex items-end justify-between gap-4">
+              <h3
+                className={cn(
+                  "font-display font-bold text-tone-light leading-[1.2] transition-transform duration-500 group-hover:translate-x-1 break-words",
+                  size === "large" ? "text-3xl md:text-5xl" : size === "medium" ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
+                )}
+              >
+                {destination.name}
+              </h3>
+              <ArrowUpRight
+                size={20}
+                className="text-tone-light/60 shrink-0 transition-all duration-300 group-hover:text-gold group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </div>
+            <p className="text-tone-light/60 text-sm mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              {destination.storyCount} stories · {destination.photoCount} photos
+            </p>
+          </div>
         </div>
       </Link>
     </motion.article>

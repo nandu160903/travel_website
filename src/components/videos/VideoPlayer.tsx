@@ -42,16 +42,16 @@ export function VideoPlayer({ embedUrl, title, thumbnail }: VideoPlayerProps) {
         className="object-cover group-hover:scale-105 transition-transform duration-700"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-charcoal/30 group-hover:bg-charcoal/20 transition-colors" />
+      <div className="absolute inset-0 bg-tone-dark/30 group-hover:bg-tone-dark/20 transition-colors" />
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
           whileHover={{ scale: 1.1 }}
-          className="w-20 h-20 rounded-full border-2 border-white flex items-center justify-center"
+          className="w-20 h-20 rounded-full border-2 border-tone-light flex items-center justify-center"
         >
-          <Play size={28} className="text-white ml-1" fill="white" />
+          <Play size={28} className="text-tone-light ml-1" fill="currentColor" />
         </motion.div>
       </div>
-      <p className="absolute bottom-6 left-6 font-display text-3xl text-white">{title}</p>
+      <p className="absolute bottom-6 left-6 font-display text-3xl text-tone-light">{title}</p>
     </button>
   );
 }

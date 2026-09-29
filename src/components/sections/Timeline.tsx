@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { TimelineEntry } from "@/types";
-import { Reveal } from "@/components/animation/Reveal";
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -12,66 +11,51 @@ interface TimelineProps {
 
 export function Timeline({ entries }: TimelineProps) {
   return (
-    <div className="relative">
-      <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2" />
+    <div className="relative border-l border-border ml-3 md:ml-6 pl-8 md:pl-12 space-y-12 md:space-y-16">
+      {entries.map((entry, i) => (
+        <motion.article
+          key={entry.id}
+          initial={{ opacity: 0, x: -16 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.06 }}
+          className="group relative"
+        >
+          <span className="absolute -left-[2.45rem] md:-left-[3.45rem] top-2 w-3 h-3 rounded-full bg-sunset border-2 border-background" />
 
-      <div className="space-y-16 md:space-y-24">
-        {entries.map((entry, i) => (
-          <Reveal key={entry.id} delay={i * 0.1}>
-            <div
-              className={`flex flex-col md:flex-row items-center gap-8 md:gap-16 ${
-                i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-              }`}
+          <div className="grid md:grid-cols-12 gap-6 items-center">
+            <p className="md:col-span-2 font-display text-4xl md:text-5xl font-bold text-sand dark:text-muted-bg leading-[1.2]">
+              {entry.year}
+            </p>
+
+            <Link
+              href={`/destinations/${entry.destinationSlug}`}
+              className="md:col-span-4 relative aspect-[4/3] overflow-hidden block"
+              data-cursor="view"
             >
-              <Link
-                href={`/destinations/${entry.destinationSlug}`}
-                className="group relative w-full md:w-1/2 aspect-[4/3] overflow-hidden"
-                data-cursor="view"
-              >
-                <Image
-                  src={entry.coverImage}
-                  alt={`${entry.city}, ${entry.country}`}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  sizes="50vw"
-                />
-                <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors" />
-              </Link>
+              <Image
+                src={entry.coverImage}
+                alt={`${entry.city}, ${entry.country}`}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                sizes="300px"
+              />
+            </Link>
 
-              <div className="w-full md:w-1/2 text-center md:text-left">
-                <p className="font-display text-6xl md:text-8xl text-sand dark:text-muted-bg leading-none">
-                  {entry.year}
-                </p>
-                <h3 className="font-display text-3xl md:text-4xl mt-2 group-hover:text-ocean">
-                  <Link href={`/destinations/${entry.destinationSlug}`}>
-                    {entry.country}
-                  </Link>
-                </h3>
-                <p className="text-[10px] uppercase tracking-[0.3em] text-ocean mt-1">
-                  {entry.city}
-                </p>
-                <p className="text-muted mt-4 leading-relaxed max-w-sm mx-auto md:mx-0">
-                  {entry.description}
-                </p>
-                <div className="flex gap-4 mt-4 justify-center md:justify-start text-[10px] uppercase tracking-widest text-muted">
-                  <span>{entry.storyCount} stories</span>
-                  <span>{entry.photoCount} photos</span>
-                </div>
+            <div className="md:col-span-6">
+              <p className="travel-meta travel-meta-accent">{entry.city}</p>
+              <h3 className="font-display text-2xl md:text-3xl font-bold leading-[1.25] mt-1 group-hover:text-forest dark:group-hover:text-gold transition-colors">
+                <Link href={`/destinations/${entry.destinationSlug}`}>{entry.country}</Link>
+              </h3>
+              <p className="text-muted mt-3 leading-relaxed max-w-md">{entry.description}</p>
+              <div className="flex gap-4 mt-4 travel-meta">
+                <span>{entry.storyCount} stories</span>
+                <span>{entry.photoCount} photos</span>
               </div>
             </div>
-
-            {i < entries.length - 1 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                className="flex justify-center my-8 md:my-12"
-              >
-                <span className="text-muted text-2xl">↓</span>
-              </motion.div>
-            )}
-          </Reveal>
-        ))}
-      </div>
+          </div>
+        </motion.article>
+      ))}
     </div>
   );
 }

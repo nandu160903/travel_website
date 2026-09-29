@@ -16,17 +16,37 @@ export function SectionHeading({
   className,
   align = "left",
 }: SectionHeadingProps) {
+  const titleParts = title.split("\n").filter(Boolean);
+
   return (
-    <Reveal className={cn("mb-12 md:mb-16", align === "center" && "text-center", className)}>
-      {label && (
-        <p className="text-[10px] uppercase tracking-[0.3em] text-muted mb-4">{label}</p>
-      )}
-      <h2 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight whitespace-pre-line">
-        {title}
+    <Reveal className={cn("mb-10 md:mb-14", align === "center" && "text-center", className)}>
+      {label && <p className="travel-meta travel-meta-accent mb-4">{label}</p>}
+      <h2
+        className={cn(
+          "font-display font-bold flex flex-col gap-2 sm:gap-3",
+          align === "center" ? "max-w-3xl mx-auto items-center" : "max-w-2xl"
+        )}
+      >
+        {titleParts.map((part, i) => (
+          <span
+            key={i}
+            className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.25] break-words"
+          >
+            {part}
+          </span>
+        ))}
       </h2>
       {subtitle && (
-        <p className="mt-4 text-muted text-lg max-w-xl leading-relaxed">{subtitle}</p>
+        <p
+          className={cn(
+            "mt-5 text-muted text-base md:text-lg leading-relaxed max-w-xl font-sans",
+            align === "center" && "mx-auto"
+          )}
+        >
+          {subtitle}
+        </p>
       )}
+      <div className={cn("editorial-rule mt-8 max-w-xs", align === "center" && "mx-auto")} />
     </Reveal>
   );
 }

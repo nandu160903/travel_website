@@ -13,7 +13,7 @@ export function StoriesFilter({ activeCategory }: StoriesFilterProps) {
   const filters = [{ slug: undefined, label: "All" }, ...storyCategories];
 
   return (
-    <div className="flex flex-wrap gap-2 md:gap-3">
+    <div className="flex flex-wrap gap-2">
       {filters.map((cat) => {
         const isActive =
           (!activeCategory && !cat.slug) || activeCategory === cat.slug;
@@ -30,8 +30,10 @@ export function StoriesFilter({ activeCategory }: StoriesFilterProps) {
             )}
             <span
               className={cn(
-                "relative block px-4 py-2 text-[10px] uppercase tracking-widest transition-colors",
-                isActive ? "text-white" : "text-muted hover:text-foreground border border-border"
+                "relative block px-4 py-2 travel-meta transition-colors border border-border",
+                isActive
+                  ? "text-tone-light border-transparent"
+                  : "text-muted hover:text-foreground hover:border-ocean/40"
               )}
             >
               {cat.label}

@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { Search, Menu, X, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
+import { Search, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
@@ -14,9 +14,11 @@ import { CreatorAuthModal } from "@/components/creator/CreatorAuthModal";
 import type { SocialLink } from "@/types";
 
 const navLinks = [
-  { href: "/destinations", label: "Destinations" },
   { href: "/journeys", label: "Journeys" },
+  { href: "/destinations", label: "Destinations" },
   { href: "/stories", label: "Stories" },
+  { href: "/photos", label: "Photos" },
+  { href: "/map", label: "Map" },
   { href: "/about", label: "About" },
 ];
 
@@ -24,30 +26,29 @@ interface HeaderProps {
   siteTitle?: string;
   socialLinks?: SocialLink[];
   transparent?: boolean;
+  heroImage?: string;
 }
 
 export function Header({
   siteTitle = "Horizon",
   socialLinks = [],
   transparent = false,
+  heroImage,
 }: HeaderProps) {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     let lastY = window.scrollY;
     const handleScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > 50);
-      setHidden(y > lastY && y > 200);
+      setScrolled(y > 40);
+      setHidden(y > lastY && y > 180);
       lastY = y;
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -71,66 +72,78 @@ export function Header({
     return () => window.removeEventListener("keydown", handleKey);
   }, [searchOpen, openSearch]);
 
-  const isSolid = scrolled || !transparent;
+  const overHero = transparent && !scrolled;
+  const navClass = overHero
+    ? "text-[var(--nav-text-hero)]/90 hover:text-[var(--nav-text-hero)]"
+    : "text-nav-text/85 hover:text-forest dark:hover:text-gold";
+  const iconClass = overHero
+    ? "text-[var(--nav-text-hero)]/80 hover:text-[var(--nav-text-hero)]"
+    : "text-nav-text/70 hover:text-forest dark:hover:text-gold";
 
   return (
     <>
       <motion.header
         initial={{ y: 0 }}
         animate={{ y: hidden ? -100 : 0 }}
-        transition={{ duration: 0.3 }}
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-          isSolid
-            ? "bg-header-bg backdrop-blur-md border-b border-border"
-            : "bg-transparent"
-        )}
+        transition={{ duration: 0.35 }}
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-8 h-16 md:h-20 flex items-center justify-between">
+        <div
+          className={cn(
+            "max-w-7xl mx-auto px-6 md:px-8 h-16 md:h-[4.5rem] flex items-center justify-between transition-all duration-500",
+            scrolled
+              ? "bg-header-bg/90 backdrop-blur-md border-b border-border/50"
+              : "bg-transparent"
+          )}
+        >
           <Logo
             siteTitle={siteTitle}
             onSecretActivate={() => setAuthOpen(true)}
+            light={overHero}
           />
 
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-xs uppercase tracking-[0.15em] text-foreground/80 hover:text-ocean transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+            {navLinks.map((link) => {
+              const active =
+                pathname === link.href || pathname.startsWith(`${link.href}/`);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "travel-meta transition-colors duration-300",
+                    navClass,
+                    active && !overHero && "text-forest dark:text-gold",
+                    active && overHero && "text-tone-light"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
-          <div className="flex items-center gap-3 md:gap-4">
-            <button
-              onClick={openSearch}
-              className="text-muted hover:text-foreground transition-colors p-1"
-              aria-label="Search"
-            >
+          <div className="flex items-center gap-2 md:gap-3">
+            <button onClick={openSearch} className={cn("p-2 transition-colors", iconClass)} aria-label="Search">
               <Search size={18} />
             </button>
 
-            {mounted && (
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-muted hover:text-foreground transition-colors p-1 hidden md:block"
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
-            )}
-
-            <SocialIcons links={socialLinks} className="hidden lg:flex" />
+            <SocialIcons
+              links={socialLinks}
+              className={cn(
+                "hidden md:flex",
+                overHero
+                  ? "[&_a]:text-tone-light/75 [&_a:hover]:text-tone-light"
+                  : "[&_a]:text-nav-text/70 [&_a:hover]:text-forest dark:[&_a:hover]:text-gold"
+              )}
+            />
 
             <button
               onClick={() => {
                 setMenuOpen(!menuOpen);
                 setMobileOpen(!mobileOpen);
               }}
-              className="md:hidden text-foreground p-1"
+              className={cn("lg:hidden p-2 transition-colors", iconClass)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
               <AnimatePresence mode="wait">
@@ -156,6 +169,7 @@ export function Header({
           setMenuOpen(false);
         }}
         socialLinks={socialLinks}
+        backgroundImage={heroImage}
       />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
       <CreatorAuthModal open={authOpen} onClose={() => setAuthOpen(false)} />

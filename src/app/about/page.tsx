@@ -3,9 +3,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { SectionHeading } from "@/components/animation/SectionHeading";
 import { Reveal } from "@/components/animation/Reveal";
 import { Timeline } from "@/components/sections/Timeline";
-import { SocialIcons } from "@/components/layout/SocialIcons";
 import { getSiteSettings, getTimeline } from "@/lib/data/queries";
-import { getSocialLinks } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
@@ -52,15 +50,13 @@ export default async function AboutPage() {
     getSiteSettings(),
     getTimeline(),
   ]);
-  const socialLinks =
-    settings.socialLinks.length > 0 ? settings.socialLinks : getSocialLinks();
 
   return (
     <PublicLayout>
       <section className="pt-32 pb-16 px-6 md:px-8 max-w-7xl mx-auto">
         <SectionHeading
-          label="About"
-          title="The World\nIs My Story."
+          label="About the Traveler"
+          title={"I Don't Collect\nSouvenirs.\nI Collect Stories."}
           subtitle={settings.bio}
         />
 
@@ -89,15 +85,11 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="py-24 bg-sand/30 dark:bg-muted-bg/20">
+      <section className="py-24 bg-muted-bg/40">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <SectionHeading label="Timeline" title="Places I've Been" />
           <Timeline entries={timeline.slice(0, 4)} />
         </div>
-      </section>
-
-      <section className="py-16 text-center">
-        <SocialIcons links={socialLinks} className="justify-center" size="md" />
       </section>
     </PublicLayout>
   );

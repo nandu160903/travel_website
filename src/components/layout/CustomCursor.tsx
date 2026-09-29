@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
 
-type CursorState = "normal" | "link" | "image" | "drag" | "view" | "read";
+type CursorState = "normal" | "link" | "image" | "drag" | "view" | "read" | "explore";
 
 export function CustomCursor() {
   const [state, setState] = useState<CursorState>("normal");
@@ -27,7 +27,8 @@ export function CustomCursor() {
 
     const handleOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest("[data-cursor='read']")) setState("read");
+      if (target.closest("[data-cursor='explore']")) setState("explore");
+      else if (target.closest("[data-cursor='read']")) setState("read");
       else if (target.closest("[data-cursor='view']")) setState("view");
       else if (target.closest("[data-cursor='drag']")) setState("drag");
       else if (target.closest("[data-cursor='image']")) setState("image");
@@ -54,6 +55,7 @@ export function CustomCursor() {
     drag: "DRAG",
     view: "VIEW",
     read: "READ",
+    explore: "EXPLORE",
   };
 
   const label = labels[state];
@@ -61,21 +63,21 @@ export function CustomCursor() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 z-[9999] pointer-events-none mix-blend-difference"
+      className="fixed top-0 left-0 z-[9999] pointer-events-none"
       style={{ x: springX, y: springY }}
     >
       <motion.div
         animate={{
-          width: isExpanded ? 64 : 12,
-          height: isExpanded ? 64 : 12,
-          x: isExpanded ? -32 : -6,
-          y: isExpanded ? -32 : -6,
+          width: isExpanded ? 56 : 10,
+          height: isExpanded ? 56 : 10,
+          x: isExpanded ? -28 : -5,
+          y: isExpanded ? -28 : -5,
         }}
         transition={{ duration: 0.2 }}
-        className="rounded-full border border-white flex items-center justify-center"
+        className="rounded-full border border-gold bg-surface/20 backdrop-blur-sm flex items-center justify-center"
       >
         {label && (
-          <span className="text-[8px] text-white tracking-widest font-medium">
+          <span className="text-[7px] text-gold tracking-[0.2em] font-bold">
             {label}
           </span>
         )}

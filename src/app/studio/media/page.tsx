@@ -56,7 +56,7 @@ export default function StudioMediaPage() {
           <h1 className="font-display text-3xl">Media Library</h1>
           <p className="text-muted text-sm mt-1">{media.length} files</p>
         </div>
-        <label className="inline-flex items-center gap-2 px-4 py-2 text-xs tracking-widest uppercase font-medium bg-ocean text-white hover:bg-teal cursor-pointer transition-colors">
+        <label className="inline-flex items-center gap-2 px-4 py-2 text-xs tracking-widest uppercase font-medium bg-ocean text-tone-light hover:bg-teal cursor-pointer transition-colors">
           <input type="file" multiple accept="image/*" className="hidden" onChange={handleUpload} />
           <Upload size={14} />
           {uploading ? "Uploading..." : "Upload"}
@@ -80,7 +80,7 @@ export default function StudioMediaPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={item.url} alt={item.filename} className="w-full h-full object-cover" />
               <button
-                className="absolute top-2 right-2 p-1.5 bg-charcoal/60 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-2 right-2 p-1.5 bg-tone-dark/60 text-tone-light opacity-0 group-hover:opacity-100 transition-opacity"
                 aria-label="Delete"
               >
                 <Trash2 size={14} />

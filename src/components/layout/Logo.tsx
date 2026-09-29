@@ -8,9 +8,10 @@ interface LogoProps {
   siteTitle?: string;
   className?: string;
   onSecretActivate?: () => void;
+  light?: boolean;
 }
 
-export function Logo({ siteTitle = "Horizon", className, onSecretActivate }: LogoProps) {
+export function Logo({ siteTitle = "Horizon", className, onSecretActivate, light }: LogoProps) {
   const clickTimestamps = useRef<number[]>([]);
 
   const handleClick = useCallback(
@@ -35,7 +36,8 @@ export function Logo({ siteTitle = "Horizon", className, onSecretActivate }: Log
       href="/"
       onClick={handleClick}
       className={cn(
-        "font-display text-xl md:text-2xl tracking-tight text-foreground hover:opacity-80 transition-opacity select-none",
+        "font-display text-xl md:text-2xl font-semibold tracking-tight select-none transition-opacity hover:opacity-80",
+        light ? "text-tone-light" : "text-foreground",
         className
       )}
     >

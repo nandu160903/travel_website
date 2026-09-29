@@ -74,7 +74,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-charcoal/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-tone-dark/20 to-transparent" />
         </div>
 
         <header className="max-w-4xl mx-auto px-6 md:px-8 -mt-20 relative z-10">
