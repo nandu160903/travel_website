@@ -25,6 +25,7 @@ import {
 import { getSocialLinks } from "@/lib/config";
 import { PhotoCard } from "@/components/cards/PhotoCard";
 import { formatDate } from "@/lib/utils";
+import { getMapboxToken } from "@/lib/config";
 
 export default async function HomePage() {
   const [settings, destinations, stories, timeline, photos, mapLocations, trips] =
@@ -51,25 +52,26 @@ export default async function HomePage() {
       {currentTrip && (
         <section className="max-w-7xl mx-auto px-6 md:px-8 py-20 md:py-28">
           <SectionHeading
+            index="01"
             label="Current Journey"
             title={currentTrip.cities[0] ?? currentTrip.title}
             subtitle={`${currentTrip.country} · ${formatDate(currentTrip.startDate, "MMMM yyyy")} — demo notebook entry.`}
           />
           <Reveal>
-            <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-start">
-              <div className="md:col-span-7 relative aspect-[4/3] md:aspect-auto md:min-h-[420px] overflow-hidden">
+            <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+              <div className="md:col-span-7 relative aspect-[4/3] md:aspect-auto md:min-h-[420px] overflow-hidden image-editorial">
                 <Image
                   src={currentTrip.coverImage}
                   alt={currentTrip.title}
                   fill
-                  className="object-cover"
+                  className="object-cover editorial-img"
                   sizes="60vw"
                 />
               </div>
-              <div className="md:col-span-5 space-y-8 min-w-0">
+              <div className="md:col-span-5 space-y-8 min-w-0 md:pt-4">
                 <div>
                   <p className="travel-meta mb-3">Journey 019 · {currentTrip.country}</p>
-                  <h3 className="font-display text-2xl md:text-3xl font-bold leading-[1.25] break-words">
+                  <h3 className="font-display text-2xl md:text-4xl font-bold leading-[0.95] break-words uppercase tracking-tight">
                     {currentTrip.title}
                   </h3>
                   <p className="text-muted mt-4 leading-relaxed font-sans">{currentTrip.description}</p>
@@ -90,25 +92,30 @@ export default async function HomePage() {
       )}
 
       {/* World Map */}
-      <section className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24" data-cursor="explore">
+      <section className="section-band-dark py-16 md:py-24 px-6 md:px-8" data-cursor="explore">
+        <div className="max-w-7xl mx-auto">
         <SectionHeading
+          index="02"
           label="Navigate"
           title={"The World\nI've Seen"}
           subtitle="An explorer's map of every place documented."
         />
         <Reveal>
-          <TravelMap locations={mapLocations} height="55vh" />
+          <TravelMap locations={mapLocations} height="55vh" mapboxToken={getMapboxToken()} />
         </Reveal>
-        <div className="text-center mt-8">
-          <Link href="/map">
-            <Button variant="primary">Open Full Map</Button>
+        <div className="mt-10">
+          <Link href="/map" className="btn-link-arrow text-paper/80 hover:text-trail">
+            Open full map
+            <span aria-hidden>→</span>
           </Link>
+        </div>
         </div>
       </section>
 
       {/* Featured Destinations */}
       <section className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24">
         <SectionHeading
+          index="03"
           label="Explore"
           title={"Featured\nDestinations"}
           subtitle="Places that left a mark — replace with your own."
@@ -136,9 +143,9 @@ export default async function HomePage() {
       </section>
 
       {/* Latest Stories */}
-      <section className="py-16 md:py-24 bg-muted-bg/40">
+      <section className="py-16 md:py-24 section-band">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <SectionHeading label="Stories" title="Recent Journals" />
+          <SectionHeading index="04" label="Stories" title="Recent Journals" />
           <div className="grid md:grid-cols-12 gap-8 md:gap-10">
             {stories[0] && (
               <div className="md:col-span-7">
@@ -162,6 +169,7 @@ export default async function HomePage() {
       {/* Timeline */}
       <section className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24">
         <SectionHeading
+          index="05"
           label="Chronicle"
           title="Travel Timeline"
           subtitle="Flipping through the diary — year by year."
@@ -172,7 +180,7 @@ export default async function HomePage() {
       {/* Photo Journal */}
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <SectionHeading label="Gallery" title="Photo Journal" align="center" />
+          <SectionHeading index="06" label="Gallery" title="Photo Journal" align="center" />
         </div>
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 px-6 md:px-8" data-cursor="drag">
           {photos.slice(0, 6).map((photo, i) => (
@@ -192,10 +200,10 @@ export default async function HomePage() {
       <TravelStats />
 
       {/* Final statement */}
-      <section className="py-24 md:py-32 px-6 text-center max-w-4xl mx-auto">
+      <section className="py-24 md:py-32 px-6 text-center max-w-4xl mx-auto border-t border-border">
         <Reveal>
           <p className="travel-meta travel-meta-accent mb-6">Final Note</p>
-          <blockquote className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.3] max-w-3xl mx-auto">
+          <blockquote className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold leading-[0.95] max-w-3xl mx-auto uppercase tracking-tight">
             I have been there. I experienced it. Here is what it looked like. Here is what it felt like.
           </blockquote>
           <p className="text-muted mt-6 text-lg">Come explore the journey.</p>
@@ -209,10 +217,10 @@ export default async function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="relative overflow-hidden border-t border-border bg-surface py-20 md:py-28 text-center px-6">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-ocean/15 via-transparent to-sunset/10" />
-        <div className="relative">
-          <h2 className="font-display text-4xl md:text-6xl font-semibold mb-4 text-foreground">
+      <section className="relative overflow-hidden border-t border-border bg-surface py-20 md:py-28 text-center px-6 texture-topo">
+        <div className="relative max-w-2xl mx-auto">
+          <p className="travel-meta travel-meta-accent mb-4">Next waypoint</p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 text-foreground uppercase tracking-tight leading-[0.95]">
             Start Exploring
           </h2>
           <p className="text-muted max-w-md mx-auto mb-8">

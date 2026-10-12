@@ -24,15 +24,17 @@ const stamps = [
 
 export function TravelStats() {
   return (
-    <section className="py-16 md:py-24 bg-muted-bg/50 border-y border-border">
+    <section className="py-16 md:py-24 section-band">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <Reveal>
           <p className="travel-meta travel-meta-accent mb-3">Personal Passport</p>
-          <h2 className="font-display text-4xl md:text-5xl font-semibold mb-12">Travel Archive</h2>
+          <h2 className="font-display text-4xl md:text-5xl font-semibold mb-12 uppercase tracking-tight leading-[0.95]">
+            Travel Archive
+          </h2>
         </Reveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16">
-          {stats.map((stat, i) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-10 mb-16">
+          {stats.map((stat) => (
             <AnimatedCounter
               key={stat.label}
               value={stat.value}
@@ -44,15 +46,15 @@ export function TravelStats() {
 
         <Reveal>
           <p className="travel-meta mb-6">My Travel Passport</p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4">
             {stamps.map((stamp) => (
               <Link
                 key={stamp.slug}
                 href={`/destinations/${stamp.slug}`}
-                className="group w-20 h-20 md:w-24 md:h-24 border-2 border-dashed border-sunset/40 rounded-full flex flex-col items-center justify-center hover:border-sunset hover:bg-sunset/5 transition-all duration-300"
+                className="passport-stamp group w-[5.5rem] h-[5.5rem] md:w-24 md:h-24 flex flex-col items-center justify-center"
               >
-                <span className="text-[10px] travel-meta text-sunset">{stamp.code}</span>
-                <span className="text-xs font-semibold text-foreground mt-1 group-hover:text-sunset transition-colors">
+                <span className="travel-meta text-trail">{stamp.code}</span>
+                <span className="text-[11px] font-semibold text-foreground mt-1 group-hover:text-trail transition-colors duration-[var(--duration-micro)]">
                   {stamp.name}
                 </span>
               </Link>

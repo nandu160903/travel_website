@@ -2,6 +2,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { SectionHeading } from "@/components/animation/SectionHeading";
 import { TravelMap } from "@/components/map/TravelMap";
 import { getMapLocations } from "@/lib/data/queries";
+import { getMapboxToken } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
@@ -21,7 +22,7 @@ export default async function MapPage() {
           title="Travel Map"
           subtitle="Every pin is a memory. Click to explore."
         />
-        <TravelMap locations={locations} height="75vh" />
+        <TravelMap locations={locations} height="75vh" mapboxToken={getMapboxToken()} />
       </section>
     </PublicLayout>
   );

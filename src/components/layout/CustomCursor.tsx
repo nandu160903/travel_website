@@ -10,8 +10,8 @@ export function CustomCursor() {
   const [visible, setVisible] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  const springX = useSpring(cursorX, { stiffness: 500, damping: 40 });
-  const springY = useSpring(cursorY, { stiffness: 500, damping: 40 });
+  const springX = useSpring(cursorX, { stiffness: 480, damping: 42 });
+  const springY = useSpring(cursorY, { stiffness: 480, damping: 42 });
 
   useEffect(() => {
     const isTouch = window.matchMedia("(pointer: coarse)").matches;
@@ -55,7 +55,7 @@ export function CustomCursor() {
     drag: "DRAG",
     view: "VIEW",
     read: "READ",
-    explore: "EXPLORE",
+    explore: "MAP",
   };
 
   const label = labels[state];
@@ -63,21 +63,22 @@ export function CustomCursor() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 z-[9999] pointer-events-none"
+      className="fixed top-0 left-0 z-[9999] pointer-events-none mix-blend-difference"
       style={{ x: springX, y: springY }}
     >
       <motion.div
         animate={{
-          width: isExpanded ? 56 : 10,
-          height: isExpanded ? 56 : 10,
-          x: isExpanded ? -28 : -5,
-          y: isExpanded ? -28 : -5,
+          width: isExpanded ? 52 : 8,
+          height: isExpanded ? 52 : 8,
+          x: isExpanded ? -26 : -4,
+          y: isExpanded ? -26 : -4,
+          rotate: isExpanded ? 0 : 45,
         }}
-        transition={{ duration: 0.2 }}
-        className="rounded-full border border-gold bg-surface/20 backdrop-blur-sm flex items-center justify-center"
+        transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+        className="border border-paper bg-transparent flex items-center justify-center"
       >
         {label && (
-          <span className="text-[7px] text-gold tracking-[0.2em] font-bold">
+          <span className="font-coords text-[6px] text-paper tracking-[0.18em]">
             {label}
           </span>
         )}

@@ -20,26 +20,30 @@ export function PhotoCard({ photo, onClick, index = 0 }: PhotoCardProps) {
 
   return (
     <motion.button
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay: index * 0.04, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
       data-cursor="view"
-      className={`group relative w-full overflow-hidden ${aspectRatio} block text-left`}
+      className={`group relative w-full overflow-hidden image-editorial ${aspectRatio} block text-left`}
     >
       <Image
         src={photo.url}
         alt={photo.caption ?? "Travel photo"}
         fill
-        className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
+        className="object-cover editorial-img"
         sizes="(max-width: 768px) 100vw, 33vw"
       />
-      <div className="absolute inset-0 bg-tone-dark/0 group-hover:bg-tone-dark/35 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-tone-dark/0 group-hover:bg-tone-dark/25 transition-colors duration-[var(--duration-standard)]" />
       {photo.location && (
-        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-tone-dark/80 to-transparent">
-          <p className="travel-meta text-tone-light/80">{photo.location}</p>
-          {photo.takenAt && <p className="text-[10px] text-tone-light/50 mt-1">{photo.takenAt}</p>}
+        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-[var(--duration-standard)] bg-gradient-to-t from-tone-dark/85 to-transparent">
+          <p className="travel-meta text-tone-light/85">{photo.location}</p>
+          {photo.takenAt && (
+            <p className="font-coords text-tone-light/45 mt-1 normal-case tracking-normal">
+              {photo.takenAt}
+            </p>
+          )}
         </div>
       )}
     </motion.button>

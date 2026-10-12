@@ -38,7 +38,8 @@ export function Modal({ open, onClose, children, title, className }: ModalProps)
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-overlay backdrop-blur-sm"
+            transition={{ duration: 0.28 }}
+            className="absolute inset-0 bg-overlay"
             onClick={onClose}
             aria-hidden
           />
@@ -46,24 +47,26 @@ export function Modal({ open, onClose, children, title, className }: ModalProps)
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 8 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "relative w-full max-w-md bg-card border border-border shadow-2xl p-8",
+              "relative w-full max-w-md bg-card border border-border p-8",
               className
             )}
           >
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 text-muted hover:text-foreground transition-colors"
+              className="absolute top-4 right-4 text-muted hover:text-trail transition-colors"
               aria-label="Close"
             >
-              <X size={18} />
+              <X size={18} strokeWidth={1.5} />
             </button>
             {title && (
-              <h2 className="font-display text-2xl mb-6 text-foreground">{title}</h2>
+              <h2 className="font-display text-2xl mb-6 text-foreground font-bold tracking-tight">
+                {title}
+              </h2>
             )}
             {children}
           </motion.div>

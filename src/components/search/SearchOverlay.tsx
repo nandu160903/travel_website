@@ -66,75 +66,79 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[90] bg-background/95 backdrop-blur-md"
+          transition={{ duration: 0.28 }}
+          className="fixed inset-0 z-[90] bg-background/97"
         >
           <div className="max-w-2xl mx-auto px-6 pt-24">
+            <p className="travel-meta travel-meta-accent mb-4">Search the archive</p>
             <div className="flex items-center gap-4 border-b border-border pb-4">
-              <Search size={20} className="text-muted shrink-0" />
+              <Search size={20} strokeWidth={1.5} className="text-muted shrink-0" />
               <input
                 autoFocus
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search stories, destinations, journeys..."
-                className="flex-1 bg-transparent text-xl text-foreground placeholder:text-muted focus:outline-none font-display"
+                placeholder="Stories, destinations, journeys..."
+                className="flex-1 bg-transparent text-xl text-foreground placeholder:text-muted focus:outline-none font-display font-semibold tracking-tight"
               />
               <button
                 onClick={onClose}
-                className="text-muted hover:text-foreground transition-colors"
+                className="text-muted hover:text-trail transition-colors duration-[var(--duration-micro)]"
                 aria-label="Close search"
               >
-                <X size={20} />
+                <X size={20} strokeWidth={1.5} />
               </button>
             </div>
 
-            <div className="mt-6 space-y-2">
-              {loading && (
-                <p className="text-muted text-sm">Searching...</p>
-              )}
+            <div className="mt-6 space-y-1">
+              {loading && <p className="font-coords text-muted">Searching...</p>}
               {!loading && query && results.length === 0 && (
-                <p className="text-muted text-sm">No results found.</p>
+                <p className="font-coords text-muted">No results found.</p>
               )}
               {results.map((result, i) => (
                 <motion.div
                   key={result.id}
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04 }}
+                  transition={{ delay: i * 0.03, duration: 0.28 }}
                 >
                   <Link
                     href={result.url}
                     onClick={onClose}
-                    className="flex items-center gap-4 p-3 hover:bg-muted-bg transition-colors group"
+                    className="flex items-center gap-4 p-3 border border-transparent hover:border-border hover:bg-muted-bg/50 transition-colors duration-[var(--duration-micro)] group"
                   >
                     {result.image && (
-                      <div className="relative w-12 h-12 shrink-0 overflow-hidden">
+                      <div className="relative w-14 h-14 shrink-0 overflow-hidden">
                         <Image
                           src={result.image}
                           alt=""
                           fill
                           className="object-cover"
-                          sizes="48px"
+                          sizes="56px"
                         />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{result.title}</p>
                       {result.subtitle && (
-                        <p className="text-sm text-muted truncate">{result.subtitle}</p>
+                        <p className="text-sm text-muted truncate font-coords normal-case tracking-normal">
+                          {result.subtitle}
+                        </p>
                       )}
                     </div>
                     <ArrowRight
                       size={16}
-                      className="text-muted group-hover:text-ocean group-hover:translate-x-1 transition-all shrink-0"
+                      strokeWidth={1.5}
+                      className="text-muted group-hover:text-trail group-hover:translate-x-1 transition-all shrink-0"
                     />
                   </Link>
                 </motion.div>
               ))}
             </div>
 
-            <p className="mt-8 text-xs text-muted text-center">
-              Press <kbd className="px-1.5 py-0.5 border border-border rounded text-[10px]">/</kbd> to search · <kbd className="px-1.5 py-0.5 border border-border rounded text-[10px]">Esc</kbd> to close
+            <p className="mt-10 font-coords text-muted text-center normal-case tracking-normal">
+              Press <kbd className="px-1.5 py-0.5 border border-border text-[10px]">/</kbd> to search ·{" "}
+              <kbd className="px-1.5 py-0.5 border border-border text-[10px]">Esc</kbd> to close
             </p>
           </div>
         </motion.div>

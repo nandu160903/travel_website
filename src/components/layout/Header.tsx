@@ -74,11 +74,11 @@ export function Header({
 
   const overHero = transparent && !scrolled;
   const navClass = overHero
-    ? "text-[var(--nav-text-hero)]/90 hover:text-[var(--nav-text-hero)]"
-    : "text-nav-text/85 hover:text-forest dark:hover:text-gold";
+    ? "text-[var(--nav-text-hero)]/88 hover:text-[var(--nav-text-hero)]"
+    : "text-nav-text/80 hover:text-trail";
   const iconClass = overHero
-    ? "text-[var(--nav-text-hero)]/80 hover:text-[var(--nav-text-hero)]"
-    : "text-nav-text/70 hover:text-forest dark:hover:text-gold";
+    ? "text-[var(--nav-text-hero)]/75 hover:text-[var(--nav-text-hero)]"
+    : "text-nav-text/65 hover:text-trail";
 
   return (
     <>
@@ -92,7 +92,7 @@ export function Header({
           className={cn(
             "max-w-7xl mx-auto px-6 md:px-8 h-16 md:h-[4.5rem] flex items-center justify-between transition-all duration-500",
             scrolled
-              ? "bg-header-bg/90 backdrop-blur-md border-b border-border/50"
+              ? "bg-header-bg border-b border-border/60"
               : "bg-transparent"
           )}
         >
@@ -110,10 +110,11 @@ export function Header({
                 <Link
                   key={link.href}
                   href={link.href}
+                  data-active={active ? "true" : "false"}
                   className={cn(
-                    "travel-meta transition-colors duration-300",
+                    "travel-meta nav-link-editorial transition-colors duration-[var(--duration-micro)]",
                     navClass,
-                    active && !overHero && "text-forest dark:text-gold",
+                    active && !overHero && "text-trail",
                     active && overHero && "text-tone-light"
                   )}
                 >
@@ -134,7 +135,7 @@ export function Header({
                 "hidden md:flex",
                 overHero
                   ? "[&_a]:text-tone-light/75 [&_a:hover]:text-tone-light"
-                  : "[&_a]:text-nav-text/70 [&_a:hover]:text-forest dark:[&_a:hover]:text-gold"
+                  : "[&_a]:text-nav-text/65 [&_a:hover]:text-trail"
               )}
             />
 

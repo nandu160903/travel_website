@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Caveat, Manrope } from "next/font/google";
+import { Space_Grotesk, Caveat, Manrope, Geist_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { siteConfig } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
 
-const dancingScript = Dancing_Script({
-  variable: "--font-dancing",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "600", "700"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 const caveat = Caveat({
@@ -33,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`dark ${dancingScript.variable} ${caveat.variable} ${manrope.variable} h-full`}
+      className={`dark ${spaceGrotesk.variable} ${geistMono.variable} ${caveat.variable} ${manrope.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         <AppProviders>{children}</AppProviders>

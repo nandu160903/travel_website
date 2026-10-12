@@ -30,7 +30,7 @@ export function AnimatedCounter({ value, suffix = "", label }: AnimatedCounterPr
 
   return (
     <div ref={ref} className="text-center md:text-left min-w-0">
-      <p className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-[1.2]">
+      <p className="font-display text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-foreground leading-[0.95] tracking-tight">
         <span ref={displayRef}>0{suffix}</span>
       </p>
       <p className="travel-meta mt-2 break-words">{label}</p>

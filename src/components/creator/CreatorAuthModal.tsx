@@ -77,7 +77,7 @@ export function CreatorAuthModal({ open, onClose, redirectTo = "/studio" }: Crea
               placeholder="Email"
               required
               autoComplete="email"
-              className="w-full px-4 py-3 bg-muted-bg border border-border text-foreground placeholder:text-muted focus:outline-none focus:border-ocean transition-colors"
+              className="w-full px-4 py-3 bg-muted-bg border border-border text-foreground placeholder:text-muted focus:outline-none focus:border-trail transition-colors"
             />
           </div>
         )}
@@ -93,7 +93,7 @@ export function CreatorAuthModal({ open, onClose, redirectTo = "/studio" }: Crea
             placeholder={useSupabase ? "Password" : "Admin password"}
             required
             autoComplete="current-password"
-            className="w-full px-4 py-3 bg-muted-bg border border-border text-foreground placeholder:text-muted focus:outline-none focus:border-ocean transition-colors"
+            className="w-full px-4 py-3 bg-muted-bg border border-border text-foreground placeholder:text-muted focus:outline-none focus:border-trail transition-colors"
           />
         </div>
         {error && <p className="text-sm text-sunset">{error}</p>}

@@ -17,6 +17,8 @@ interface TravelMapProps {
   className?: string;
   interactive?: boolean;
   height?: string;
+  /** Prefer passing from a Server Component so the token is read from `.env` at runtime. */
+  mapboxToken?: string;
 }
 
 export function TravelMap({
@@ -24,21 +26,26 @@ export function TravelMap({
   className,
   interactive = true,
   height = "70vh",
+  mapboxToken: mapboxTokenProp,
 }: TravelMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [filter, setFilter] = useState<MapFilter>("all");
   const [mapReady, setMapReady] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
   const mapStyle = "mapbox://styles/mapbox/dark-v11";
+
+  const mapboxToken = (mapboxTokenProp ?? siteConfig.mapboxToken ?? "").trim();
 
   const filtered =
     filter === "all" ? locations : locations.filter((l) => l.type === filter);
 
   useEffect(() => {
-    if (!mapContainer.current || !siteConfig.mapboxToken) return;
+    if (!mapContainer.current || !mapboxToken) return;
 
-    mapboxgl.accessToken = siteConfig.mapboxToken;
+    setMapError(null);
+    mapboxgl.accessToken = mapboxToken;
 
     const map = new mapboxgl.Map({
       container: mapContainer.current,
@@ -53,7 +60,16 @@ export function TravelMap({
 
     map.on("load", () => {
       map.setFog({});
+      map.resize();
       setMapReady(true);
+    });
+
+    map.on("error", (event) => {
+      const message =
+        event.error?.message ??
+        "Map failed to load. Check your Mapbox token and URL restrictions.";
+      setMapError(message);
+      setMapReady(false);
     });
 
     mapRef.current = map;
@@ -63,7 +79,7 @@ export function TravelMap({
       mapRef.current = null;
       setMapReady(false);
     };
-  }, [interactive, mapStyle]);
+  }, [interactive, mapStyle, mapboxToken]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -74,7 +90,7 @@ export function TravelMap({
     filtered.forEach((loc) => {
       const el = document.createElement("div");
       el.className =
-        "w-3 h-3 rounded-full bg-ocean border-2 border-tone-light shadow-lg cursor-pointer hover:scale-150 transition-transform";
+        "w-2.5 h-2.5 bg-trail border border-paper rotate-45 cursor-pointer hover:scale-125 transition-transform duration-200 shadow-sm";
       el.addEventListener("click", () => {
         setSelected(loc);
         map.flyTo({
@@ -101,7 +117,7 @@ export function TravelMap({
     { key: "story", label: "Stories" },
   ];
 
-  if (!siteConfig.mapboxToken) {
+  if (!mapboxToken) {
     return (
       <div
         className={cn("relative bg-muted-bg flex items-center justify-center border border-border", className)}
@@ -110,7 +126,8 @@ export function TravelMap({
         <div className="text-center p-8">
           <p className="font-display text-2xl mb-2">Map Preview</p>
           <p className="text-muted text-sm max-w-md">
-            Add <code className="text-ocean">NEXT_PUBLIC_MAPBOX_TOKEN</code> to enable the interactive map.
+            Add <code className="text-ocean">NEXT_PUBLIC_MAPBOX_TOKEN</code> to{" "}
+            <code className="text-ocean">.env</code>, then restart the dev server.
           </p>
           <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3 max-w-lg mx-auto">
             {filtered.slice(0, 6).map((loc) => (
@@ -145,8 +162,8 @@ export function TravelMap({
             className={cn(
               "px-3 py-1.5 text-[10px] uppercase tracking-widest transition-colors",
               filter === f.key
-                ? "bg-ocean text-tone-light"
-                : "bg-card/90 backdrop-blur text-muted hover:text-foreground border border-border"
+                ? "bg-trail text-paper"
+                : "bg-card/95 text-muted hover:text-foreground border border-border"
             )}
           >
             {f.label}
@@ -154,7 +171,20 @@ export function TravelMap({
         ))}
       </div>
 
-      <div ref={mapContainer} style={{ height }} className="w-full" />
+      <div ref={mapContainer} style={{ height }} className="w-full min-h-[240px]" />
+
+      {mapError && (
+        <div className="absolute inset-0 z-[5] flex items-center justify-center bg-tone-dark/90 p-6 text-center">
+          <div className="max-w-md">
+            <p className="font-display text-lg text-paper mb-2">Map unavailable</p>
+            <p className="text-sm text-paper/70">{mapError}</p>
+            <p className="text-xs text-paper/50 mt-4">
+              In Mapbox, allow this site URL under token URL restrictions (e.g.{" "}
+              <code className="text-trail">http://localhost:3000</code>).
+            </p>
+          </div>
+        </div>
+      )}
 
       <AnimatePresence>
         {selected && (
@@ -210,7 +240,7 @@ function MapPopup({
         <p className="text-sm text-muted mt-3 line-clamp-2">{location.description}</p>
         <Link
           href={href}
-          className="inline-block mt-4 text-xs uppercase tracking-widest text-ocean hover:text-gold transition-colors"
+          className="inline-block mt-4 travel-meta text-trail hover:text-terrain transition-colors"
         >
           Explore →
         </Link>

@@ -62,12 +62,12 @@ export default async function AboutPage() {
 
         <div className="grid md:grid-cols-2 gap-12 items-start mt-8">
           <Reveal>
-            <div className="relative aspect-[3/4] max-w-md overflow-hidden">
+            <div className="relative aspect-[3/4] max-w-md overflow-hidden image-editorial">
               <Image
                 src={settings.profilePhoto}
                 alt="Profile"
                 fill
-                className="object-cover"
+                className="object-cover editorial-img"
                 sizes="400px"
               />
             </div>
@@ -76,7 +76,7 @@ export default async function AboutPage() {
             <div className="space-y-12">
               {sections.map((section) => (
                 <div key={section.title}>
-                  <h3 className="font-display text-2xl mb-3">{section.title}</h3>
+                  <h3 className="font-display text-xl md:text-2xl mb-3 uppercase tracking-tight leading-[0.95]">{section.title}</h3>
                   <p className="text-muted leading-relaxed">{section.content}</p>
                 </div>
               ))}
@@ -85,7 +85,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="py-24 bg-muted-bg/40">
+      <section className="py-24 section-band">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <SectionHeading label="Timeline" title="Places I've Been" />
           <Timeline entries={timeline.slice(0, 4)} />

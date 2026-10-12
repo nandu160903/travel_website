@@ -24,16 +24,16 @@ export function StoriesFilter({ activeCategory }: StoriesFilterProps) {
             {isActive && (
               <motion.div
                 layoutId="story-filter"
-                className="absolute inset-0 bg-ocean"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="absolute inset-0 bg-trail"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
               />
             )}
             <span
               className={cn(
                 "relative block px-4 py-2 travel-meta transition-colors border border-border",
                 isActive
-                  ? "text-tone-light border-transparent"
-                  : "text-muted hover:text-foreground hover:border-ocean/40"
+                  ? "text-paper border-transparent"
+                  : "text-muted hover:text-foreground hover:border-trail/35"
               )}
             >
               {cat.label}

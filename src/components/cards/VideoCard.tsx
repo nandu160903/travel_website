@@ -19,39 +19,38 @@ export function VideoCard({ video }: VideoCardProps) {
       data-cursor="view"
     >
       <Link href={`/videos#${video.id}`} className="block">
-        <div className="relative aspect-video overflow-hidden mb-4">
+        <div className="relative aspect-video overflow-hidden mb-4 image-editorial">
           <Image
             src={video.thumbnail}
             alt={video.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            className="object-cover editorial-img"
             sizes="50vw"
           />
-          <div className="absolute inset-0 bg-tone-dark/30 group-hover:bg-tone-dark/20 transition-colors" />
+          <div className="absolute inset-0 bg-tone-dark/25 group-hover:bg-tone-dark/15 transition-colors duration-[var(--duration-standard)]" />
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
               variants={{
                 rest: { scale: 1 },
-                hover: { scale: 1.1 },
+                hover: { scale: 1.05 },
               }}
-              className="w-14 h-14 rounded-full border border-tone-light/80 flex items-center justify-center"
+              transition={{ duration: 0.2 }}
+              className="w-12 h-12 border border-tone-light/90 flex items-center justify-center bg-tone-dark/20"
             >
-              <Play size={20} className="text-tone-light ml-1" fill="currentColor" />
+              <Play size={18} className="text-tone-light ml-0.5" fill="currentColor" />
             </motion.div>
           </div>
           {video.duration && (
-            <span className="absolute bottom-3 right-3 text-[10px] uppercase tracking-widest text-tone-light bg-tone-dark/60 px-2 py-1">
+            <span className="absolute bottom-3 right-3 font-coords text-tone-light bg-tone-dark/70 px-2 py-1 normal-case tracking-normal">
               {video.duration}
             </span>
           )}
         </div>
-        <h3 className="font-display text-2xl group-hover:text-ocean transition-colors">
+        <h3 className="font-display text-xl md:text-2xl uppercase tracking-tight leading-[0.95] group-hover:text-trail transition-colors duration-[var(--duration-micro)]">
           {video.title}
         </h3>
         {video.location && (
-          <p className="text-[10px] uppercase tracking-widest text-muted mt-1">
-            {video.location}
-          </p>
+          <p className="travel-meta mt-2">{video.location}</p>
         )}
       </Link>
     </motion.article>

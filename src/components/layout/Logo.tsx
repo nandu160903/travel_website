@@ -36,8 +36,8 @@ export function Logo({ siteTitle = "Horizon", className, onSecretActivate, light
       href="/"
       onClick={handleClick}
       className={cn(
-        "font-display text-xl md:text-2xl font-semibold tracking-tight select-none transition-opacity hover:opacity-80",
-        light ? "text-tone-light" : "text-foreground",
+        "font-display text-lg md:text-xl font-bold tracking-tight uppercase select-none transition-colors duration-[var(--duration-micro)]",
+        light ? "text-tone-light hover:text-trail" : "text-foreground hover:text-trail",
         className
       )}
     >

@@ -1,4 +1,5 @@
 import { TravelMap } from "@/components/map/TravelMap";
+import { getMapboxToken } from "@/lib/config";
 import { MapLocationManager } from "@/components/studio/MapLocationManager";
 import { getStudioMapLocations } from "@/lib/data/studio-queries";
 
@@ -11,7 +12,7 @@ export default async function StudioMapPage() {
         <h1 className="font-display text-3xl mb-2">Map Locations</h1>
         <p className="text-muted text-sm">Manage pins shown on the public travel map.</p>
       </div>
-      <TravelMap locations={locations} height="45vh" />
+      <TravelMap locations={locations} height="45vh" mapboxToken={getMapboxToken()} />
       <MapLocationManager key={locations.map((l) => l.id).join("-")} locations={locations} />
     </div>
   );

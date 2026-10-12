@@ -12,9 +12,14 @@ export const siteConfig = {
     "Stories, photographs and memories from everywhere the road takes me."
   ),
   contactEmail: env("NEXT_PUBLIC_CONTACT_EMAIL", "hello@example.com"),
-  mapboxToken: env("NEXT_PUBLIC_MAPBOX_TOKEN"),
+  mapboxToken: env("NEXT_PUBLIC_MAPBOX_TOKEN").trim(),
   creatorEmail: env("CREATOR_EMAIL", "creator@example.com"),
 };
+
+/** Read at request time on the server (from `.env`); pass into client map components. */
+export function getMapboxToken(): string {
+  return (process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "").trim();
+}
 
 export function getSocialLinks(): SocialLink[] {
   const links: SocialLink[] = [];
