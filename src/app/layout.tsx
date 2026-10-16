@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Caveat, Manrope, Geist_Mono } from "next/font/google";
+import {
+  Space_Grotesk,
+  Caveat,
+  Manrope,
+  Geist_Mono,
+  Cormorant_Garamond,
+} from "next/font/google";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { siteConfig } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
@@ -29,6 +35,12 @@ const manrope = Manrope({
   weight: ["400", "500", "600", "700"],
 });
 
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = createMetadata({
   title: siteConfig.title,
   description: siteConfig.description,
@@ -39,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`dark ${spaceGrotesk.variable} ${geistMono.variable} ${caveat.variable} ${manrope.variable} h-full`}
+      className={`dark ${spaceGrotesk.variable} ${geistMono.variable} ${caveat.variable} ${manrope.variable} ${cormorant.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         <AppProviders>{children}</AppProviders>

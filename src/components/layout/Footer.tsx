@@ -6,7 +6,6 @@ import type { SocialLink } from "@/types";
 const footerNav = [
   { href: "/journeys", label: "Journeys" },
   { href: "/destinations", label: "Destinations" },
-  { href: "/stories", label: "Stories" },
   { href: "/photos", label: "Photos" },
   { href: "/map", label: "Map" },
   { href: "/about", label: "About" },
@@ -24,14 +23,13 @@ export function Footer({
   contactEmail = "hello@example.com",
 }: FooterProps) {
   return (
-    <footer className="relative mt-24 border-t border-border bg-tone-dark text-paper">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 py-20 md:py-28">
+    <footer className="relative border-t border-border bg-tone-dark text-paper">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
           <div className="md:col-span-5">
-            <p className="travel-meta travel-meta-accent mb-4">Field Atlas · Vol. I</p>
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[0.95] font-bold flex flex-col gap-1">
-              <span>Keep</span>
-              <span className="text-terrain">Wandering</span>
+            <p className="travel-meta text-olive mb-4">Adventure · Outdoors</p>
+            <h2 className="font-serif-heading text-4xl sm:text-5xl md:text-[3.25rem] leading-tight text-paper">
+              Create your next journey with us
             </h2>
             <p className="mt-6 text-paper/60 text-sm max-w-sm leading-relaxed font-sans">
               The world is a book, and those who do not travel read only one page.
@@ -45,7 +43,7 @@ export function Footer({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-paper/70 hover:text-trail transition-colors duration-[var(--duration-micro)] w-fit inline-flex items-center gap-2 group"
+                  className="text-sm text-paper/70 hover:text-olive transition-colors duration-[var(--duration-micro)] w-fit inline-flex items-center gap-2 group"
                 >
                   {link.label}
                   <span aria-hidden className="transition-transform duration-[var(--duration-micro)] group-hover:translate-x-1">→</span>
@@ -58,11 +56,11 @@ export function Footer({
             <p className="travel-meta mb-6 text-paper/45">Stay Connected</p>
             <SocialIcons
               links={socialLinks}
-              className="mb-6 [&_a]:text-paper/55 [&_a:hover]:text-trail"
+              className="mb-6 [&_a]:text-paper/55 [&_a:hover]:text-olive"
             />
             <a
               href={`mailto:${contactEmail}`}
-              className="font-coords text-paper/55 hover:text-trail transition-colors block mb-8"
+              className="font-coords text-paper/55 hover:text-olive transition-colors block mb-8"
             >
               {contactEmail}
             </a>

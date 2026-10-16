@@ -37,7 +37,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        "inline-flex items-center justify-center gap-2 font-semibold transition-[background-color,border-color,color,transform] duration-[var(--duration-micro)] ease-[var(--ease-out-editorial)] disabled:opacity-50 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trail",
+        "inline-flex items-center justify-center gap-2 font-semibold rounded-full transition-[background-color,border-color,color,transform] duration-[var(--duration-micro)] ease-[var(--ease-out-editorial)] disabled:opacity-50 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-olive",
         variants[variant],
         sizes[size],
         className

@@ -2,11 +2,46 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
-import { AnimatedText } from "@/components/animation/AnimatedText";
-import { Button } from "@/components/ui/Button";
-import { ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
+import { MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const SLIDE_INTERVAL_MS = 7000;
+
+const defaultSlides = [
+  {
+    image:
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=2400&q=85",
+    title: "ADVENTURE",
+    subtitle: "Create Your Outdoor Adventure, Discover With Us.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2400&q=85",
+    title: "EXPLORE",
+    subtitle: "Trailheads, peaks, and quiet forests waiting beyond the ridge.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2400&q=85",
+    title: "SUMMIT",
+    subtitle: "Plan routes, gear up, and go where the map ends.",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=2400&q=85",
+    title: "WILDERNESS",
+    subtitle: "Authentic journeys for travelers who chase the horizon.",
+  },
+];
+
+const heroHighlights = [
+  { label: "Be yourself with new vibes", active: true },
+  { label: "Discover hidden trails", active: false },
+  { label: "Guided outdoor escapes", active: false },
+  { label: "Book your next summit", active: false },
+];
 
 interface HeroProps {
   heroImage: string;
@@ -14,95 +49,142 @@ interface HeroProps {
   subtitle?: string;
 }
 
-export function Hero({
-  heroImage,
-  title = "The Road\nKeeps Calling",
-  subtitle = "Stories, places and memories collected along the way.",
-}: HeroProps) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
+export function Hero({ heroImage, title, subtitle }: HeroProps) {
+  const slides = [
+    {
+      ...defaultSlides[0],
+      image: heroImage || defaultSlides[0].image,
+      title: title ?? defaultSlides[0].title,
+      subtitle: subtitle ?? defaultSlides[0].subtitle,
+    },
+    ...defaultSlides.slice(1),
+  ];
 
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.06, 1]);
-  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
-  const textY = useTransform(scrollYProgress, [0, 0.45], [0, -32]);
+  const [active, setActive] = useState(0);
+
+  const goTo = useCallback((index: number) => {
+    setActive((index + slides.length) % slides.length);
+  }, [slides.length]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActive((prev) => (prev + 1) % slides.length);
+    }, SLIDE_INTERVAL_MS);
+    return () => window.clearInterval(timer);
+  }, [slides.length]);
+
+  const slide = slides[active];
 
   return (
-    <section ref={ref} className="relative min-h-[100svh] overflow-hidden">
-      <motion.div style={{ scale: imageScale, y: imageY }} className="absolute inset-0">
-        <Image
-          src={heroImage}
-          alt="Travel hero"
-          fill
-          priority
-          className="object-cover editorial-img"
-          sizes="100vw"
-        />
-      </motion.div>
+    <section className="relative min-h-[100svh] overflow-hidden bg-tone-dark">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={slide.image}
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={slide.image}
+            alt=""
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+        </motion.div>
+      </AnimatePresence>
 
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to bottom, var(--hero-overlay-from) 0%, var(--hero-overlay-mid) 45%, var(--background) 100%)`,
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 45%, rgba(10,10,10,0.92) 100%)",
         }}
       />
 
-      <motion.div
-        style={{ opacity: textOpacity, y: textY }}
-        className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 md:px-10 pb-28 md:pb-36 pt-24 max-w-7xl mx-auto w-full gap-6 md:gap-7"
+      <div className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-10 hidden md:flex flex-col gap-4">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => goTo(i)}
+            className={cn(
+              "font-coords text-left transition-colors duration-300",
+              i === active ? "text-olive" : "text-tone-light/35 hover:text-tone-light/60"
+            )}
+            aria-label={`Go to slide ${i + 1}`}
+          >
+            {String(i + 1).padStart(2, "0")}
+          </button>
+        ))}
+        <div className="w-px h-16 bg-tone-light/15 ml-2 mt-2" />
+      </div>
+
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-24 pb-44 text-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.title}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-5xl"
+          >
+            <h1 className="font-display text-[3.25rem] sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold uppercase tracking-tight text-tone-light leading-[0.92]">
+              {slide.title}
+            </h1>
+            <p className="mt-5 text-tone-light/75 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-sans">
+              {slide.subtitle}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-tone-light/10 bg-black/35 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 md:py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {heroHighlights.map((item, i) => (
+              <div
+                key={item.label}
+                className={cn(
+                  "flex items-start gap-2.5 min-w-0",
+                  i >= 2 && "hidden sm:flex"
+                )}
+              >
+                <MapPin
+                  size={14}
+                  className={cn(
+                    "shrink-0 mt-0.5",
+                    item.active ? "text-olive" : "text-tone-light/45"
+                  )}
+                  strokeWidth={1.75}
+                />
+                <p
+                  className={cn(
+                    "text-[0.65rem] md:text-xs leading-snug",
+                    item.active
+                      ? "text-tone-light border-b border-olive pb-1"
+                      : "text-tone-light/50"
+                  )}
+                >
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 h-px max-w-[120px] bg-olive/80" />
+        </div>
+      </div>
+
+      <Link
+        href="/destinations"
+        className="sr-only"
       >
-        <AnimatedText
-          text={title}
-          className="font-display text-[2.65rem] sm:text-5xl md:text-[3.75rem] lg:text-[4.5rem] text-tone-light max-w-4xl font-bold uppercase"
-          delay={0.35}
-        />
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.85, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="text-tone-light/75 text-base md:text-lg max-w-md leading-relaxed font-sans font-medium"
-        >
-          {subtitle}
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-wrap gap-3 md:gap-4 pt-2"
-        >
-          <Link href="/journeys">
-            <Button variant="primary">Explore Journeys</Button>
-          </Link>
-          <Link href="/map">
-            <Button
-              variant="outline"
-              className="border-tone-light/40 text-tone-light hover:border-trail hover:text-trail hover:bg-transparent"
-            >
-              View The Map
-            </Button>
-          </Link>
-        </motion.div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.5 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
-      >
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut" }}
-          className="text-tone-light/35"
-        >
-          <ChevronDown size={20} strokeWidth={1.5} />
-        </motion.div>
-      </motion.div>
+        Browse adventures
+      </Link>
     </section>
   );
 }

@@ -9,9 +9,16 @@ interface LogoProps {
   className?: string;
   onSecretActivate?: () => void;
   light?: boolean;
+  monogram?: boolean;
 }
 
-export function Logo({ siteTitle = "Horizon", className, onSecretActivate, light }: LogoProps) {
+export function Logo({
+  siteTitle = "Horizon",
+  className,
+  onSecretActivate,
+  light,
+  monogram = false,
+}: LogoProps) {
   const clickTimestamps = useRef<number[]>([]);
 
   const handleClick = useCallback(
@@ -31,17 +38,27 @@ export function Logo({ siteTitle = "Horizon", className, onSecretActivate, light
     [onSecretActivate]
   );
 
+  const letter = siteTitle.trim().charAt(0).toUpperCase() || "S";
+
   return (
     <Link
       href="/"
       onClick={handleClick}
       className={cn(
-        "font-display text-lg md:text-xl font-bold tracking-tight uppercase select-none transition-colors duration-[var(--duration-micro)]",
-        light ? "text-tone-light hover:text-trail" : "text-foreground hover:text-trail",
+        "select-none transition-colors duration-[var(--duration-micro)] shrink-0",
+        monogram
+          ? cn(
+              "font-display text-xl md:text-2xl font-bold italic tracking-tight",
+              light ? "text-tone-light hover:text-olive" : "text-foreground hover:text-olive"
+            )
+          : cn(
+              "font-display text-lg md:text-xl font-bold tracking-tight uppercase",
+              light ? "text-tone-light hover:text-olive" : "text-foreground hover:text-olive"
+            ),
         className
       )}
     >
-      {siteTitle}
+      {monogram ? letter : siteTitle}
     </Link>
   );
 }

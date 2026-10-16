@@ -9,12 +9,11 @@ import { cn } from "@/lib/utils";
 import type { SocialLink } from "@/types";
 
 const navLinks = [
-  { href: "/journeys", label: "Journeys" },
-  { href: "/destinations", label: "Destinations" },
-  { href: "/stories", label: "Stories" },
-  { href: "/photos", label: "Photos" },
-  { href: "/map", label: "Map" },
+  { href: "/", label: "Adventure" },
   { href: "/about", label: "About" },
+  { href: "/journeys", label: "My Journeys" },
+  { href: "/destinations", label: "Destinations" },
+  { href: "/photos", label: "Photos" },
 ];
 
 interface MobileMenuProps {

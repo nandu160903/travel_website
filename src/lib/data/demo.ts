@@ -13,14 +13,14 @@ import type {
 
 /** Demo content — clearly fictional placeholders for development */
 export const demoSettings: SiteSettings = {
-  siteTitle: "Horizon Journal",
+  siteTitle: "Summit Journal",
   siteDescription:
     "Stories, photographs and memories from everywhere the road takes me.",
   bio: "A wanderer with a camera, documenting the world one horizon at a time.",
   profilePhoto:
     "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
   heroImage:
-    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2400&q=85",
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=2400&q=85",
   email: "hello@example.com",
   socialLinks: [
     {
