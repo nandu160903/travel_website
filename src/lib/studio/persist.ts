@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import type {
+  AboutPageContent,
   Destination,
   MapLocation,
   Photo,
@@ -403,6 +404,13 @@ export async function deleteMapLocation(id: string) {
 
   await updateCmsStore((store) => {
     store.mapLocations = store.mapLocations.filter((l) => l.id !== id);
+    return store;
+  });
+}
+
+export async function persistAboutPage(about: AboutPageContent) {
+  await updateCmsStore((store) => {
+    store.aboutPage = about;
     return store;
   });
 }

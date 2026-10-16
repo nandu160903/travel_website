@@ -148,6 +148,17 @@ export interface SocialLink {
   url: string;
 }
 
+export interface AboutSection {
+  title: string;
+  content: string;
+}
+
+export interface AboutPageContent {
+  headline: string;
+  subtitle: string;
+  sections: AboutSection[];
+}
+
 export interface SiteSettings {
   siteTitle: string;
   siteDescription: string;

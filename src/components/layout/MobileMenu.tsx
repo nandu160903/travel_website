@@ -4,14 +4,15 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { SocialIcons } from "./SocialIcons";
 import { cn } from "@/lib/utils";
 import type { SocialLink } from "@/types";
 
 const navLinks = [
-  { href: "/", label: "Adventure" },
+  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/journeys", label: "My Journeys" },
+  { href: "/journeys", label: "Journeys" },
   { href: "/destinations", label: "Destinations" },
   { href: "/photos", label: "Photos" },
 ];
@@ -25,6 +26,20 @@ interface MobileMenuProps {
 
 export function MobileMenu({ open, onClose, socialLinks, backgroundImage }: MobileMenuProps) {
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
+
   const bg =
     backgroundImage ??
     "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80";
@@ -54,7 +69,10 @@ export function MobileMenu({ open, onClose, socialLinks, backgroundImage }: Mobi
             <p className="travel-meta text-tone-light/40 mb-8">Menu · Field Atlas</p>
             <nav className="flex-1 flex flex-col justify-center gap-5 md:gap-7">
               {navLinks.map((link, i) => {
-                const active = pathname === link.href;
+                const active =
+                  link.href === "/"
+                    ? pathname === "/"
+                    : pathname === link.href || pathname.startsWith(`${link.href}/`);
                 return (
                   <motion.div
                     key={link.href}

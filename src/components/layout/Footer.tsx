@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { SocialIcons } from "./SocialIcons";
-import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import type { SocialLink } from "@/types";
 
 const footerNav = [
@@ -27,12 +26,13 @@ export function Footer({
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
           <div className="md:col-span-5">
-            <p className="travel-meta text-olive mb-4">Adventure · Outdoors</p>
+            <p className="travel-meta text-olive mb-4">Personal journal</p>
             <h2 className="font-serif-heading text-4xl sm:text-5xl md:text-[3.25rem] leading-tight text-paper">
-              Create your next journey with us
+              My trips, photos, and notes
             </h2>
             <p className="mt-6 text-paper/60 text-sm max-w-sm leading-relaxed font-sans">
-              The world is a book, and those who do not travel read only one page.
+              A small corner of the internet where I keep what I saw and how it felt — not a
+              guidebook, just my own record.
             </p>
           </div>
 
@@ -53,18 +53,17 @@ export function Footer({
           </div>
 
           <div className="md:col-span-4">
-            <p className="travel-meta mb-6 text-paper/45">Stay Connected</p>
+            <p className="travel-meta mb-6 text-paper/45">Elsewhere</p>
             <SocialIcons
               links={socialLinks}
               className="mb-6 [&_a]:text-paper/55 [&_a:hover]:text-olive"
             />
             <a
               href={`mailto:${contactEmail}`}
-              className="font-coords text-paper/55 hover:text-olive transition-colors block mb-8"
+              className="font-coords text-paper/55 hover:text-olive transition-colors block"
             >
               {contactEmail}
             </a>
-            <NewsletterForm />
           </div>
         </div>
 

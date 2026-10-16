@@ -20,10 +20,10 @@ export function WondersOfNature({ destinations }: WondersOfNatureProps) {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16">
             <div className="text-center md:text-left max-w-xl mx-auto md:mx-0">
               <h2 className="font-serif-heading text-3xl md:text-4xl lg:text-[2.75rem] text-foreground">
-                The Wonders Of Nature
+                Places I&apos;ve Documented
               </h2>
               <p className="mt-4 text-muted text-sm md:text-base leading-relaxed">
-                We seek to provide the authentic content for traveler around the world.
+                Corners of the world that show up again and again in my journals and photo rolls.
               </p>
             </div>
             <Link

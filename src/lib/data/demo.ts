@@ -1,4 +1,5 @@
 import type {
+  AboutPageContent,
   City,
   DashboardStats,
   Destination,
@@ -13,7 +14,7 @@ import type {
 
 /** Demo content — clearly fictional placeholders for development */
 export const demoSettings: SiteSettings = {
-  siteTitle: "Summit Journal",
+  siteTitle: "Normad on two wheels",
   siteDescription:
     "Stories, photographs and memories from everywhere the road takes me.",
   bio: "A wanderer with a camera, documenting the world one horizon at a time.",
@@ -30,13 +31,50 @@ export const demoSettings: SiteSettings = {
     { platform: "facebook", url: "https://facebook.com/YOUR_USERNAME" },
   ],
   seoDefaults: {
-    title: "Horizon Journal — Travel Stories & Photography",
+    title: "Normad on two wheels — Personal travel journal",
     description:
-      "Explore destinations, travel stories, and cinematic photography from journeys around the world.",
+      "Personal travel journal — stories, photos, and notes from my own journeys.",
     ogImage:
       "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=85",
   },
   featuredDestinationIds: ["dest-japan", "dest-iceland", "dest-bali"],
+};
+
+export const demoAboutPage: AboutPageContent = {
+  headline: "I Don't Collect\nSouvenirs.\nI Collect Stories.",
+  subtitle: "The story behind the journeys. Who I am and what travel means to me.",
+  sections: [
+    {
+      title: "Who I Am",
+      content:
+        "I'm a traveler who believes the best stories aren't found in guidebooks — they're discovered in alleyways, train stations, and conversations with strangers.",
+    },
+    {
+      title: "My Relationship with Travel",
+      content:
+        "Travel isn't escape for me — it's engagement. Every journey is an invitation to see differently, to question assumptions, and to collect moments that reshape how I understand the world.",
+    },
+    {
+      title: "What Travel Means to Me",
+      content:
+        "It means patience at a temple gate. It means getting lost on purpose. It means the photograph that almost wasn't taken.",
+    },
+    {
+      title: "Places That Changed Me",
+      content:
+        "Kyoto taught me silence. Iceland taught me scale. Bali taught me slowness. Each place left something behind — a habit, a perspective, a way of seeing.",
+    },
+    {
+      title: "Things I Always Carry",
+      content:
+        "A notebook. A camera. An open schedule. Comfortable shoes. And the willingness to change plans when something unexpected appears on the horizon.",
+    },
+    {
+      title: "How I Document My Journeys",
+      content:
+        "Photographs for the visual memory. Notes for the details I'd otherwise forget. Stories for the meaning behind the moments.",
+    },
+  ],
 };
 
 export const demoDestinations: Destination[] = [

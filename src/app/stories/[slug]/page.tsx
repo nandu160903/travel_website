@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { StoryContent } from "@/components/stories/StoryContent";
@@ -14,6 +13,7 @@ import {
 import { formatDate, formatCoordinates, absoluteUrl } from "@/lib/utils";
 import { createMetadata, storyJsonLd, breadcrumbJsonLd } from "@/lib/seo/metadata";
 import { getSocialLinks } from "@/lib/config";
+import { sanitizeCmsHtml } from "@/lib/sanitizeCmsHtml";
 
 interface StoryPageProps {
   params: Promise<{ slug: string }>;
@@ -100,7 +100,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
           </div>
         </header>
 
-        <StoryContent html={story.content} />
+        <StoryContent html={sanitizeCmsHtml(story.content)} />
 
         {story.gallery && story.gallery.length > 0 && (
           <section className="max-w-5xl mx-auto px-6 md:px-8 py-12">

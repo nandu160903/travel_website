@@ -6,7 +6,7 @@ function env(key: string, fallback = ""): string {
 
 export const siteConfig = {
   url: env("NEXT_PUBLIC_SITE_URL", "http://localhost:3000"),
-  title: env("NEXT_PUBLIC_SITE_TITLE", "Horizon Journal"),
+  title: env("NEXT_PUBLIC_SITE_TITLE", "Normad on two wheels"),
   description: env(
     "NEXT_PUBLIC_SITE_DESCRIPTION",
     "Stories, photographs and memories from everywhere the road takes me."

@@ -39,7 +39,7 @@ export function ExploreNature() {
         <Reveal>
           <div className="text-center mb-10 md:mb-14">
             <h2 className="font-serif-heading text-3xl md:text-4xl lg:text-[2.75rem] text-foreground">
-              Explore The Nature With Us
+              Moments From the Trail
             </h2>
             <div className="mx-auto mt-4 h-0.5 w-12 bg-olive" />
           </div>

@@ -105,6 +105,106 @@
   --font-script: var(--font-caveat);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
+  --font-brand: var(--font-syne);
+}
+
+/* ── Normad on two wheels — minimal moto wordmark ── */
+.brand-lockup {
+  --brand-ink: var(--foreground);
+  --brand-dim: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+.brand-lockup[data-light="true"] {
+  --brand-ink: var(--tone-light);
+  --brand-dim: color-mix(in srgb, var(--tone-light) 58%, transparent);
+}
+
+.brand-glyph {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--olive) 45%, transparent);
+  background: color-mix(in srgb, var(--olive) 6%, transparent);
+  transition:
+    border-color var(--duration-micro) ease,
+    background-color var(--duration-micro) ease,
+    transform var(--duration-standard) var(--ease-out-editorial);
+}
+
+.group:hover .brand-glyph,
+.group:focus-visible .brand-glyph {
+  border-color: color-mix(in srgb, var(--olive) 75%, transparent);
+  background: color-mix(in srgb, var(--olive) 11%, transparent);
+  transform: translateY(-1px);
+}
+
+.brand-name {
+  font-family: var(--font-syne), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.05rem, 2.4vw, 1.28rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: var(--brand-ink);
+}
+
+.brand-name-tail {
+  color: var(--olive);
+}
+
+.brand-tagline {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brand-dim);
+  white-space: nowrap;
+}
+
+.brand-tagline-dot {
+  width: 0.2rem;
+  height: 0.2rem;
+  border-radius: 9999px;
+  background: var(--olive);
+  opacity: 0.85;
+}
+
+.brand-wheel-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+  margin-inline: 0.08rem;
+  vertical-align: -0.05em;
+}
+
+.brand-wheel-pair span {
+  width: 0.34em;
+  height: 0.34em;
+  border-radius: 9999px;
+  border: 1px solid var(--olive);
+  background: color-mix(in srgb, var(--olive) 22%, transparent);
+  transition: background-color var(--duration-micro) ease;
+}
+
+.group:hover .brand-wheel-pair span,
+.group:focus-visible .brand-wheel-pair span {
+  background: color-mix(in srgb, var(--olive) 45%, transparent);
+}
+
+.brand-glyph-stroke {
+  stroke: var(--brand-ink);
+  transition: stroke var(--duration-micro) ease;
+}
+
+.brand-glyph-accent {
+  stroke: var(--olive);
 }
 
 * {
@@ -114,6 +214,7 @@
 html {
   scroll-behavior: smooth;
   color-scheme: var(--color-scheme);
+  overflow-x: clip;
 }
 
 html.dark {

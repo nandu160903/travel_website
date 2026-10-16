@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   MapPin,
   BookOpen,
+  UserRound,
   Camera,
   Video,
   Map,
@@ -16,12 +17,15 @@ import {
   Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Session from "supertokens-auth-react/recipe/session";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/utils";
+import { isSuperTokensEnabled } from "@/lib/supertokens/admin";
 
 const navItems = [
   { href: "/studio", label: "Overview", icon: LayoutDashboard },
   { href: "/studio/trips", label: "Journeys", icon: Plane },
+  { href: "/studio/about", label: "About Page", icon: UserRound },
   { href: "/studio/destinations", label: "Destinations", icon: MapPin },
   { href: "/studio/stories", label: "Stories", icon: BookOpen },
   { href: "/studio/photos", label: "Photos", icon: Camera },
@@ -36,7 +40,9 @@ export function StudioSidebar() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    if (isSupabaseConfigured()) {
+    if (isSuperTokensEnabled()) {
+      await Session.signOut();
+    } else if (isSupabaseConfigured()) {
       const supabase = createClient();
       await supabase.auth.signOut();
     } else {

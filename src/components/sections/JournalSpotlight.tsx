@@ -24,7 +24,7 @@ const gallery = {
   },
 };
 
-export function PerfectVacation() {
+export function JournalSpotlight() {
   return (
     <section className="py-20 md:py-28 px-6 md:px-10 bg-background">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -65,19 +65,19 @@ export function PerfectVacation() {
         <Reveal delay={0.12}>
           <div className="lg:pl-4">
             <h2 className="font-serif-heading text-3xl md:text-4xl lg:text-[2.65rem] text-foreground leading-tight">
-              Here&apos;s makes a vacation perfect for you!
+              Notes from the road, kept here
             </h2>
             <p className="mt-6 text-muted text-sm md:text-base leading-relaxed">
-              Whether you are planning a family trek, a pet-friendly lakeside retreat, or a
-              remote mountain cabin, we match you with routes and stays that fit how you travel.
+              This site is my personal archive — trips I took, places that changed how I see
+              things, and the photos I didn&apos;t want to lose in a camera roll.
             </p>
             <p className="mt-4 text-muted text-sm md:text-base leading-relaxed">
-              Every itinerary is built from real field notes — seasons, trail conditions, and
-              local guides included — so your time outdoors feels effortless and unforgettable.
+              Some entries are polished stories; others are rough field notes. All of it is
+              mine, shared in the open for anyone curious where the trail led.
             </p>
             <Link href="/journeys" className="inline-block mt-8">
               <Button variant="primary" className="adventure-pill px-8">
-                My Journeys
+                Read my journeys
               </Button>
             </Link>
           </div>

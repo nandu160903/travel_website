@@ -32,6 +32,7 @@ export async function writeCmsStore(store: CmsStore): Promise<void> {
 export function cmsStoreHasContent(store: CmsStore): boolean {
   return !!(
     store.siteSettings ||
+    store.aboutPage ||
     store.destinations.length ||
     store.trips.length ||
     store.stories.length ||

@@ -39,17 +39,16 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
     return () => clearTimeout(timer);
   }, [query, search]);
 
-  useEffect(() => {
-    if (!open) {
-      setQuery("");
-      setResults([]);
-    }
-  }, [open]);
+  const handleClose = useCallback(() => {
+    setQuery("");
+    setResults([]);
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
@@ -57,7 +56,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
       document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = "";
     };
-  }, [open, onClose]);
+  }, [open, handleClose]);
 
   return (
     <AnimatePresence>
@@ -82,7 +81,8 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                 className="flex-1 bg-transparent text-xl text-foreground placeholder:text-muted focus:outline-none font-display font-semibold tracking-tight"
               />
               <button
-                onClick={onClose}
+                type="button"
+                onClick={handleClose}
                 className="text-muted hover:text-trail transition-colors duration-[var(--duration-micro)]"
                 aria-label="Close search"
               >
@@ -104,7 +104,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                 >
                   <Link
                     href={result.url}
-                    onClick={onClose}
+                    onClick={handleClose}
                     className="flex items-center gap-4 p-3 border border-transparent hover:border-border hover:bg-muted-bg/50 transition-colors duration-[var(--duration-micro)] group"
                   >
                     {result.image && (

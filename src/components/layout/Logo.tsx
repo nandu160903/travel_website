@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { BrandWordmark } from "./BrandWordmark";
 
 interface LogoProps {
   siteTitle?: string;
@@ -10,6 +11,15 @@ interface LogoProps {
   onSecretActivate?: () => void;
   light?: boolean;
   monogram?: boolean;
+  wordmark?: boolean;
+}
+
+function parseBrandTitle(siteTitle: string) {
+  const match = siteTitle.match(/^(.+?)\s+on\s+(.+)$/i);
+  if (match) {
+    return { name: match[1].trim(), tagline: `on ${match[2].trim()}` };
+  }
+  return { name: siteTitle.trim(), tagline: null };
 }
 
 export function Logo({
@@ -18,8 +28,11 @@ export function Logo({
   onSecretActivate,
   light,
   monogram = false,
+  wordmark = false,
 }: LogoProps) {
   const clickTimestamps = useRef<number[]>([]);
+  const { name, tagline } = parseBrandTitle(siteTitle);
+  const letter = siteTitle.trim().charAt(0).toUpperCase() || "N";
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -38,27 +51,39 @@ export function Logo({
     [onSecretActivate]
   );
 
-  const letter = siteTitle.trim().charAt(0).toUpperCase() || "S";
+  const colorPrimary = light ? "text-tone-light" : "text-foreground";
 
   return (
     <Link
       href="/"
       onClick={handleClick}
       className={cn(
-        "select-none transition-colors duration-[var(--duration-micro)] shrink-0",
-        monogram
-          ? cn(
-              "font-display text-xl md:text-2xl font-bold italic tracking-tight",
-              light ? "text-tone-light hover:text-olive" : "text-foreground hover:text-olive"
-            )
-          : cn(
-              "font-display text-lg md:text-xl font-bold tracking-tight uppercase",
-              light ? "text-tone-light hover:text-olive" : "text-foreground hover:text-olive"
-            ),
+        "group select-none transition-opacity duration-[var(--duration-micro)] shrink-0 max-w-[min(100%,13.5rem)] sm:max-w-[15rem] hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-olive",
         className
       )}
+      aria-label={siteTitle}
     >
-      {monogram ? letter : siteTitle}
+      {wordmark && tagline ? (
+        <BrandWordmark name={name} tagline={tagline} light={light} />
+      ) : monogram ? (
+        <span
+          className={cn(
+            "font-display text-xl md:text-2xl font-bold italic tracking-tight",
+            colorPrimary
+          )}
+        >
+          {letter}
+        </span>
+      ) : (
+        <span
+          className={cn(
+            "font-display text-lg md:text-xl font-bold tracking-tight uppercase",
+            colorPrimary
+          )}
+        >
+          {siteTitle}
+        </span>
+      )}
     </Link>
   );
 }

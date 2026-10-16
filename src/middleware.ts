@@ -1,7 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { getSSRSession } from "supertokens-node/nextjs";
 import { updateSession } from "@/lib/supabase/middleware";
 import { isSupabaseConfigured } from "@/lib/utils";
 import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/studio/admin-session";
+import { ensureSuperTokensInit } from "@/lib/supertokens/backend";
+import {
+  isAdminConfigured,
+  isSuperTokensEnabled,
+  resolveIsAdmin,
+} from "@/lib/supertokens/admin";
 
 function isProtectedStudioPath(pathname: string) {
   return pathname.startsWith("/studio") && !pathname.startsWith("/studio/login");
@@ -14,8 +21,65 @@ function isProtectedApiPath(pathname: string) {
   );
 }
 
+async function superTokensAdminAllowed(request: NextRequest): Promise<boolean> {
+  if (!isSuperTokensEnabled() || !isAdminConfigured()) {
+    return false;
+  }
+
+  ensureSuperTokensInit();
+
+  const { accessTokenPayload, hasToken } = await getSSRSession(
+    request.cookies.getAll()
+  );
+
+  if (!hasToken || !accessTokenPayload) {
+    return false;
+  }
+
+  const payload = accessTokenPayload as { isAdmin?: boolean; sub?: string };
+  if (payload.isAdmin === true) {
+    return true;
+  }
+
+  const userId = typeof payload.sub === "string" ? payload.sub : undefined;
+  if (!userId) {
+    return false;
+  }
+
+  return resolveIsAdmin(userId);
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname === "/vault") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/studio";
+    url.searchParams.set(
+      "redirectTo",
+      request.nextUrl.searchParams.get("redirect") ?? "/studio"
+    );
+    return NextResponse.redirect(url);
+  }
+
+  if (isSuperTokensEnabled() && (isProtectedStudioPath(pathname) || isProtectedApiPath(pathname))) {
+    ensureSuperTokensInit();
+
+    const allowed = await superTokensAdminAllowed(request);
+    if (!allowed) {
+      if (isProtectedApiPath(pathname)) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/studio";
+      url.searchParams.set("redirectTo", pathname);
+      if (isAdminConfigured() && (await getSSRSession(request.cookies.getAll())).hasToken) {
+        url.searchParams.set("error", "not_admin");
+      }
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
+  }
 
   if (isSupabaseConfigured()) {
     if (isProtectedApiPath(pathname)) {
@@ -59,8 +123,8 @@ export async function middleware(request: NextRequest) {
 
   if (isProtectedStudioPath(pathname) && !isAuthed) {
     const url = request.nextUrl.clone();
-    url.pathname = "/vault";
-    url.searchParams.set("redirect", pathname);
+    url.pathname = "/auth/studio";
+    url.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(url);
   }
 

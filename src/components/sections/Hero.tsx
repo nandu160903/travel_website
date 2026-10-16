@@ -1,11 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { useCallback, useEffect, useState } from "react";
-import { MapPin } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const SLIDE_INTERVAL_MS = 7000;
 
@@ -14,33 +11,26 @@ const defaultSlides = [
     image:
       "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=2400&q=85",
     title: "ADVENTURE",
-    subtitle: "Create Your Outdoor Adventure, Discover With Us.",
+    subtitle: "A personal log of mountains, miles, and quiet mornings outdoors.",
   },
   {
     image:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2400&q=85",
     title: "EXPLORE",
-    subtitle: "Trailheads, peaks, and quiet forests waiting beyond the ridge.",
+    subtitle: "Trails I walked, wrong turns included — written down so I remember.",
   },
   {
     image:
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2400&q=85",
     title: "SUMMIT",
-    subtitle: "Plan routes, gear up, and go where the map ends.",
+    subtitle: "High points from recent trips, one ridge line at a time.",
   },
   {
     image:
       "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=2400&q=85",
     title: "WILDERNESS",
-    subtitle: "Authentic journeys for travelers who chase the horizon.",
+    subtitle: "Lessons learned where cell service ends and the sky feels wider.",
   },
-];
-
-const heroHighlights = [
-  { label: "Be yourself with new vibes", active: true },
-  { label: "Discover hidden trails", active: false },
-  { label: "Guided outdoor escapes", active: false },
-  { label: "Book your next summit", active: false },
 ];
 
 interface HeroProps {
@@ -61,10 +51,6 @@ export function Hero({ heroImage, title, subtitle }: HeroProps) {
   ];
 
   const [active, setActive] = useState(0);
-
-  const goTo = useCallback((index: number) => {
-    setActive((index + slides.length) % slides.length);
-  }, [slides.length]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -105,25 +91,7 @@ export function Hero({ heroImage, title, subtitle }: HeroProps) {
         }}
       />
 
-      <div className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-10 hidden md:flex flex-col gap-4">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => goTo(i)}
-            className={cn(
-              "font-coords text-left transition-colors duration-300",
-              i === active ? "text-olive" : "text-tone-light/35 hover:text-tone-light/60"
-            )}
-            aria-label={`Go to slide ${i + 1}`}
-          >
-            {String(i + 1).padStart(2, "0")}
-          </button>
-        ))}
-        <div className="w-px h-16 bg-tone-light/15 ml-2 mt-2" />
-      </div>
-
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-24 pb-44 text-center">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 pt-24 pb-28 text-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.title}
@@ -142,49 +110,6 @@ export function Hero({ heroImage, title, subtitle }: HeroProps) {
           </motion.div>
         </AnimatePresence>
       </div>
-
-      <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-tone-light/10 bg-black/35 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 py-5 md:py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {heroHighlights.map((item, i) => (
-              <div
-                key={item.label}
-                className={cn(
-                  "flex items-start gap-2.5 min-w-0",
-                  i >= 2 && "hidden sm:flex"
-                )}
-              >
-                <MapPin
-                  size={14}
-                  className={cn(
-                    "shrink-0 mt-0.5",
-                    item.active ? "text-olive" : "text-tone-light/45"
-                  )}
-                  strokeWidth={1.75}
-                />
-                <p
-                  className={cn(
-                    "text-[0.65rem] md:text-xs leading-snug",
-                    item.active
-                      ? "text-tone-light border-b border-olive pb-1"
-                      : "text-tone-light/50"
-                  )}
-                >
-                  {item.label}
-                </p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 h-px max-w-[120px] bg-olive/80" />
-        </div>
-      </div>
-
-      <Link
-        href="/destinations"
-        className="sr-only"
-      >
-        Browse adventures
-      </Link>
     </section>
   );
 }

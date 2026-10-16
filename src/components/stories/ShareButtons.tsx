@@ -11,11 +11,13 @@ interface ShareButtonsProps {
   socialLinks?: SocialLink[];
 }
 
-export function ShareButtons({ url, title, socialLinks = [] }: ShareButtonsProps) {
+export function ShareButtons({ url, title: pageTitle, socialLinks = [] }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const copyLink = async () => {
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(
+      pageTitle ? `${pageTitle}\n${url}` : url
+    );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

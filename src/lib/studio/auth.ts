@@ -2,6 +2,8 @@ import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { isSupabaseConfigured } from "@/lib/utils";
 import { ADMIN_COOKIE, isLocalAdminEnabled, verifyAdminToken } from "./admin-session";
+import { isAdminConfigured, isSuperTokensEnabled } from "@/lib/supertokens/admin";
+import { verifySuperTokensAdmin } from "@/lib/supertokens/session";
 
 async function verifySupabaseCreator(): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
@@ -27,6 +29,28 @@ async function verifyLocalAdminToken(token: string | undefined): Promise<boolean
 }
 
 export async function verifyStudioAccess(request?: NextRequest): Promise<boolean> {
+  if (isSuperTokensEnabled() && isAdminConfigured()) {
+    if (!request) {
+      const { headers } = await import("next/headers");
+      const h = await headers();
+      const cookieHeader = h.get("cookie") ?? "";
+      const fakeRequest = {
+        cookies: {
+          getAll: () =>
+            cookieHeader.split(";").map((part) => {
+              const [name, ...rest] = part.trim().split("=");
+              return { name, value: rest.join("=") };
+            }),
+        },
+        headers: h,
+        method: "GET",
+        url: "http://localhost",
+      } as unknown as NextRequest;
+      return verifySuperTokensAdmin(fakeRequest);
+    }
+    return verifySuperTokensAdmin(request);
+  }
+
   if (isSupabaseConfigured()) {
     return verifySupabaseCreator();
   }

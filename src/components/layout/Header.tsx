@@ -2,20 +2,20 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Search, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
+import { AuthNavButton } from "./AuthNavButton";
 import { MobileMenu } from "./MobileMenu";
 import { SearchOverlay } from "@/components/search/SearchOverlay";
-import { CreatorAuthModal } from "@/components/creator/CreatorAuthModal";
 import type { SocialLink } from "@/types";
 
 const navLinks = [
-  { href: "/", label: "Adventure" },
+  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/journeys", label: "My Journeys" },
+  { href: "/journeys", label: "Journeys" },
 ];
 
 interface HeaderProps {
@@ -32,11 +32,11 @@ export function Header({
   heroImage,
 }: HeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -61,12 +61,12 @@ export function Header({
       }
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "K") {
         e.preventDefault();
-        setAuthOpen(true);
+        router.push("/auth");
       }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [searchOpen, openSearch]);
+  }, [searchOpen, openSearch, router]);
 
   const overHero = transparent && !scrolled;
 
@@ -80,16 +80,11 @@ export function Header({
       >
         <div
           className={cn(
-            "max-w-7xl mx-auto px-6 md:px-10 h-16 md:h-[4.75rem] flex items-center gap-4 md:gap-8 transition-all duration-500",
+            "max-w-7xl mx-auto px-4 sm:px-6 md:px-10 min-h-16 md:min-h-[4.75rem] py-2 flex items-center gap-3 md:gap-8 transition-all duration-500",
             scrolled ? "bg-header-bg/95 backdrop-blur-md border-b border-border" : "bg-transparent"
           )}
         >
-          <Logo
-            siteTitle={siteTitle}
-            onSecretActivate={() => setAuthOpen(true)}
-            light={overHero}
-            monogram
-          />
+          <Logo siteTitle={siteTitle} light={overHero} wordmark />
 
           <button
             type="button"
@@ -128,18 +123,7 @@ export function Header({
                 </Link>
               );
             })}
-            <button
-              type="button"
-              onClick={() => setAuthOpen(true)}
-              className={cn(
-                "adventure-pill border px-5 py-2 text-sm font-medium transition-colors",
-                overHero
-                  ? "border-tone-light/50 text-tone-light hover:bg-tone-light/10"
-                  : "border-border text-foreground hover:border-olive hover:text-olive"
-              )}
-            >
-              Login
-            </button>
+            <AuthNavButton overHero={overHero} />
           </nav>
 
           <div className="flex items-center gap-2 ml-auto lg:ml-0">
@@ -200,7 +184,6 @@ export function Header({
         backgroundImage={heroImage}
       />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
-      <CreatorAuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );
 }

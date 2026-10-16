@@ -14,11 +14,26 @@ export function CustomCursor() {
   const springY = useSpring(cursorY, { stiffness: 480, damping: 42 });
 
   useEffect(() => {
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
-    if (isTouch) return;
+    const mq = window.matchMedia("(pointer: fine)");
+    const enable = () => {
+      const fine = mq.matches;
+      setVisible(fine);
+      if (fine) {
+        document.body.classList.add("custom-cursor");
+      } else {
+        document.body.classList.remove("custom-cursor");
+      }
+    };
 
-    document.body.classList.add("custom-cursor");
-    setVisible(true);
+    const frame = requestAnimationFrame(enable);
+    mq.addEventListener("change", enable);
+
+    if (!mq.matches) {
+      return () => {
+        cancelAnimationFrame(frame);
+        mq.removeEventListener("change", enable);
+      };
+    }
 
     const move = (e: MouseEvent) => {
       cursorX.set(e.clientX);
@@ -40,6 +55,8 @@ export function CustomCursor() {
     window.addEventListener("mouseover", handleOver);
 
     return () => {
+      cancelAnimationFrame(frame);
+      mq.removeEventListener("change", enable);
       document.body.classList.remove("custom-cursor");
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseover", handleOver);

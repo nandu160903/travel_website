@@ -1,8 +1,7 @@
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Hero } from "@/components/sections/Hero";
 import { WondersOfNature } from "@/components/sections/WondersOfNature";
-import { ChoosingUs } from "@/components/sections/ChoosingUs";
-import { PerfectVacation } from "@/components/sections/PerfectVacation";
+import { JournalSpotlight } from "@/components/sections/JournalSpotlight";
 import { ExploreNature } from "@/components/sections/ExploreNature";
 import { getSiteSettings, getDestinations } from "@/lib/data/queries";
 
@@ -21,8 +20,7 @@ export default async function HomePage() {
     <PublicLayout transparentHeader>
       <Hero heroImage={settings.heroImage} />
       <WondersOfNature destinations={featuredFirst} />
-      <ChoosingUs />
-      <PerfectVacation />
+      <JournalSpotlight />
       <ExploreNature />
     </PublicLayout>
   );

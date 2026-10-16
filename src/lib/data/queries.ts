@@ -1,4 +1,5 @@
 import type {
+  AboutPageContent,
   City,
   DashboardStats,
   Destination,
@@ -24,6 +25,7 @@ import {
   mapMapLocation,
 } from "./mappers";
 import {
+  demoAboutPage,
   demoCities,
   demoDashboardStats,
   demoDestinations,
@@ -45,6 +47,11 @@ async function getSupabaseClient() {
 async function getActiveCmsStore() {
   const store = await readCmsStore();
   return store && cmsStoreHasContent(store) ? store : null;
+}
+
+export async function getAboutPage(): Promise<AboutPageContent> {
+  const store = await getActiveCmsStore();
+  return store?.aboutPage ?? demoAboutPage;
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {

@@ -1,4 +1,5 @@
 import type {
+  AboutPageContent,
   Destination,
   MapLocation,
   Photo,
@@ -10,6 +11,7 @@ import type {
 
 export interface CmsStore {
   siteSettings?: SiteSettings;
+  aboutPage?: AboutPageContent;
   destinations: Destination[];
   trips: Trip[];
   stories: Story[];
