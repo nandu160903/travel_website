@@ -80,7 +80,7 @@ export function Header({
       >
         <div
           className={cn(
-            "max-w-7xl mx-auto px-4 sm:px-6 md:px-10 min-h-16 md:min-h-[4.75rem] py-2 flex items-center gap-3 md:gap-8 transition-all duration-500",
+            "layout-shell max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-10 min-h-16 md:min-h-[4.75rem] py-2 flex items-center gap-3 md:gap-8 transition-all duration-500 safe-top",
             scrolled ? "bg-header-bg/95 backdrop-blur-md border-b border-border" : "bg-transparent"
           )}
         >
@@ -130,7 +130,7 @@ export function Header({
             <button
               onClick={openSearch}
               className={cn(
-                "lg:hidden p-2 transition-colors",
+                "lg:hidden touch-target inline-flex items-center justify-center transition-colors",
                 overHero ? "text-tone-light/80" : "text-foreground/70"
               )}
               aria-label="Search"
@@ -143,7 +143,7 @@ export function Header({
                 setMobileOpen(!mobileOpen);
               }}
               className={cn(
-                "lg:hidden p-2 transition-colors",
+                "lg:hidden touch-target inline-flex items-center justify-center transition-colors",
                 overHero ? "text-tone-light/80" : "text-foreground/70"
               )}
               aria-label={menuOpen ? "Close menu" : "Open menu"}

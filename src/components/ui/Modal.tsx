@@ -32,7 +32,7 @@ export function Modal({ open, onClose, children, title, className }: ModalProps)
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 safe-bottom safe-x">
           <motion.div
             ref={overlayRef}
             initial={{ opacity: 0 }}
@@ -52,13 +52,14 @@ export function Modal({ open, onClose, children, title, className }: ModalProps)
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "relative w-full max-w-md bg-card border border-border p-8",
+              "relative max-h-[min(90dvh,640px)] w-full max-w-md overflow-y-auto bg-card border border-border p-6 sm:p-8",
               className
             )}
           >
             <button
+              type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 text-muted hover:text-trail transition-colors"
+              className="touch-target absolute top-3 right-3 inline-flex items-center justify-center text-muted hover:text-trail transition-colors"
               aria-label="Close"
             >
               <X size={18} strokeWidth={1.5} />

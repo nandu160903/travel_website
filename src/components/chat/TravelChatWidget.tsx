@@ -91,7 +91,7 @@ export function TravelChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.98 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-24 right-4 sm:right-6 z-[70] flex w-[min(100vw-2rem,380px)] flex-col overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+            className="fixed right-4 sm:right-6 z-[70] bottom-[max(6rem,calc(1.5rem+env(safe-area-inset-bottom,0px)))] flex w-[min(100vw-2rem,380px)] max-h-[min(85dvh,640px)] flex-col overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_24px_80px_rgba(0,0,0,0.55)] safe-x"
             role="dialog"
             aria-label="Nearby places assistant"
           >
@@ -181,7 +181,7 @@ export function TravelChatWidget() {
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
         className={cn(
-          "fixed bottom-6 right-4 sm:right-6 z-[70] h-14 w-14 rounded-full shadow-lg flex items-center justify-center border",
+          "fixed right-4 sm:right-6 z-[70] bottom-[max(1.5rem,env(safe-area-inset-bottom,0px))] h-14 w-14 rounded-full shadow-lg flex items-center justify-center border safe-x",
           open
             ? "bg-surface border-border text-foreground"
             : "bg-olive border-olive text-ink"

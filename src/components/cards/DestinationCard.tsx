@@ -66,7 +66,7 @@ export function DestinationCard({
                 className="text-tone-light/50 shrink-0 transition-all duration-[var(--duration-micro)] group-hover:text-trail group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               />
             </div>
-            <p className="font-coords text-tone-light/45 mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-standard)]">
+            <p className="font-coords text-tone-light/45 mt-3 opacity-0 group-hover:opacity-100 hover-reveal-meta transition-opacity duration-[var(--duration-standard)]">
               {destination.storyCount} stories · {destination.photoCount} photos
             </p>
           </div>

@@ -6,13 +6,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, signUp } from "supertokens-auth-react/recipe/emailpassword";
 import Session from "supertokens-auth-react/recipe/session";
 import { Button } from "@/components/ui/Button";
+import { safeRedirectPath } from "@/lib/security/safeRedirect";
 
 type Mode = "signin" | "signup";
 
 export function AdminAuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") ?? "/studio";
+  const redirectTo = safeRedirectPath(searchParams.get("redirectTo"), "/studio");
   const errorParam = searchParams.get("error");
 
   const [mode, setMode] = useState<Mode>("signin");

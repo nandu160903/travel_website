@@ -25,12 +25,15 @@ export async function GET(request: NextRequest) {
       const payload = session.getAccessTokenPayload() as { isAdmin?: boolean };
       const isAdmin = payload.isAdmin === true || resolveIsAdmin(userId);
 
-      return NextResponse.json({
+      const body: Record<string, unknown> = {
         authenticated: true,
         userId,
         isAdmin,
-        configuredAdminUserId: getConfiguredAdminUserId() ?? null,
-      });
+      };
+      if (isAdmin) {
+        body.configuredAdminUserId = getConfiguredAdminUserId() ?? null;
+      }
+      return NextResponse.json(body);
     },
     { sessionRequired: false }
   );

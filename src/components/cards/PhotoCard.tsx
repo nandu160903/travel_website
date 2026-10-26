@@ -35,9 +35,9 @@ export function PhotoCard({ photo, onClick, index = 0 }: PhotoCardProps) {
         className="object-cover editorial-img"
         sizes="(max-width: 768px) 100vw, 33vw"
       />
-      <div className="absolute inset-0 bg-tone-dark/0 group-hover:bg-tone-dark/25 transition-colors duration-[var(--duration-standard)]" />
+      <div className="absolute inset-0 bg-tone-dark/0 group-hover:bg-tone-dark/25 hover-reveal-overlay transition-colors duration-[var(--duration-standard)]" />
       {photo.location && (
-        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-[var(--duration-standard)] bg-gradient-to-t from-tone-dark/85 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover-reveal-meta transition-all duration-[var(--duration-standard)] bg-gradient-to-t from-tone-dark/85 to-transparent">
           <p className="travel-meta text-tone-light/85">{photo.location}</p>
           {photo.takenAt && (
             <p className="font-coords text-tone-light/45 mt-1 normal-case tracking-normal">

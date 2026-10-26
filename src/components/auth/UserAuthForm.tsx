@@ -5,13 +5,14 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, signUp } from "supertokens-auth-react/recipe/emailpassword";
 import { Button } from "@/components/ui/Button";
+import { safeRedirectPath } from "@/lib/security/safeRedirect";
 
 type Mode = "signin" | "signup";
 
 export function UserAuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") ?? "/";
+  const redirectTo = safeRedirectPath(searchParams.get("redirectTo"), "/");
 
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");

@@ -56,7 +56,11 @@ export function RichTextEditor({
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Link.configure({ openOnClick: false }),
+      Link.configure({
+        openOnClick: false,
+        validate: (href) =>
+          /^(https?:\/\/|\/|mailto:)/i.test(href) && !/^javascript:/i.test(href),
+      }),
       Image,
       Placeholder.configure({ placeholder }),
     ],

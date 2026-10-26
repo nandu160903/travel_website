@@ -6,6 +6,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/utils";
+import { safeRedirectPath } from "@/lib/security/safeRedirect";
 
 interface CreatorAuthModalProps {
   open: boolean;
@@ -13,7 +14,12 @@ interface CreatorAuthModalProps {
   redirectTo?: string;
 }
 
-export function CreatorAuthModal({ open, onClose, redirectTo = "/studio" }: CreatorAuthModalProps) {
+export function CreatorAuthModal({
+  open,
+  onClose,
+  redirectTo: redirectProp = "/studio",
+}: CreatorAuthModalProps) {
+  const redirectTo = safeRedirectPath(redirectProp, "/studio");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

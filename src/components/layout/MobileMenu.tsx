@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { X } from "lucide-react";
 import { SocialIcons } from "./SocialIcons";
 import { cn } from "@/lib/utils";
 import type { SocialLink } from "@/types";
@@ -65,8 +66,16 @@ export function MobileMenu({ open, onClose, socialLinks, backgroundImage }: Mobi
             <div className="absolute inset-0 bg-tone-dark/85" />
           </motion.div>
 
-          <div className="relative flex flex-col h-full px-8 py-28">
-            <p className="travel-meta text-tone-light/40 mb-8">Menu · Field Atlas</p>
+          <div className="relative flex flex-col h-full px-6 sm:px-8 py-24 safe-top safe-bottom safe-x">
+            <button
+              type="button"
+              onClick={onClose}
+              className="touch-target absolute top-[max(1rem,env(safe-area-inset-top,0px))] right-4 inline-flex items-center justify-center text-tone-light/80"
+              aria-label="Close menu"
+            >
+              <X size={26} />
+            </button>
+            <p className="travel-meta text-tone-light/40 mb-8 mt-10">Menu · Field Atlas</p>
             <nav className="flex-1 flex flex-col justify-center gap-5 md:gap-7">
               {navLinks.map((link, i) => {
                 const active =

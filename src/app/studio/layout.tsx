@@ -1,4 +1,4 @@
-import { StudioSidebar } from "@/components/studio/StudioSidebar";
+import { StudioShell } from "@/components/studio/StudioShell";
 
 export const metadata = {
   title: "Studio — Horizon Journal",
@@ -6,10 +6,5 @@ export const metadata = {
 };
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-screen bg-background">
-      <StudioSidebar />
-      <main className="flex-1 overflow-y-auto">{children}</main>
-    </div>
-  );
+  return <StudioShell>{children}</StudioShell>;
 }

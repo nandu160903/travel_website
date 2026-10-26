@@ -12,6 +12,7 @@ import type {
   Video,
 } from "@/types";
 import { updateCmsStore } from "@/lib/cms/store";
+import { sanitizeCmsHtml } from "@/lib/sanitizeCmsHtml";
 import { isSupabaseConfigured } from "@/lib/utils";
 
 async function getSupabase() {
@@ -160,11 +161,12 @@ export async function persistStory(input: {
   cityName?: string;
   featured?: boolean;
 }) {
+  const content = sanitizeCmsHtml(input.content ?? "");
   const payload = {
     slug: input.slug,
     title: input.title,
     excerpt: input.excerpt ?? "",
-    content: input.content ?? "",
+    content,
     cover_image: input.coverImage ?? "",
     category: input.category ?? "personal",
     status: input.status ?? "draft",
@@ -192,7 +194,7 @@ export async function persistStory(input: {
       slug: input.slug,
       title: input.title,
       excerpt: input.excerpt ?? "",
-      content: input.content ?? "",
+      content,
       coverImage: input.coverImage ?? "",
       destinationId: input.destinationId ?? existing?.destinationId ?? "",
       destinationSlug: dest?.slug ?? existing?.destinationSlug ?? "",

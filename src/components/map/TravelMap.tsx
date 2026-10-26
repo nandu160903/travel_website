@@ -25,7 +25,7 @@ export function TravelMap({
   locations,
   className,
   interactive = true,
-  height = "70vh",
+  height = "min(70dvh, 720px)",
   mapboxToken: mapboxTokenProp,
 }: TravelMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -47,6 +47,10 @@ export function TravelMap({
     setMapError(null);
     mapboxgl.accessToken = mapboxToken;
 
+    const coarsePointer =
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: coarse)").matches;
+
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: mapStyle,
@@ -54,6 +58,7 @@ export function TravelMap({
       zoom: 1.5,
       projection: "globe",
       interactive,
+      cooperativeGestures: coarsePointer,
     });
 
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
@@ -84,13 +89,27 @@ export function TravelMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
+    const resize = () => map.resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("orientationchange", resize);
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("orientationchange", resize);
+    };
+  }, [mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
 
     const markers: mapboxgl.Marker[] = [];
 
     filtered.forEach((loc) => {
       const el = document.createElement("div");
       el.className =
-        "w-2.5 h-2.5 bg-trail border border-paper rotate-45 cursor-pointer hover:scale-125 transition-transform duration-200 shadow-sm";
+        "w-3.5 h-3.5 md:w-2.5 md:h-2.5 bg-trail border border-paper rotate-45 cursor-pointer hover:scale-125 transition-transform duration-200 shadow-sm";
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-label", `Show ${loc.name}`);
       el.addEventListener("click", () => {
         setSelected(loc);
         map.flyTo({
@@ -160,7 +179,7 @@ export function TravelMap({
             key={f.key}
             onClick={() => setFilter(f.key)}
             className={cn(
-              "px-3 py-1.5 text-[10px] uppercase tracking-widest transition-colors",
+              "min-h-11 px-3 py-2 text-[10px] uppercase tracking-widest transition-colors",
               filter === f.key
                 ? "bg-trail text-paper"
                 : "bg-card/95 text-muted hover:text-foreground border border-border"
@@ -224,8 +243,9 @@ function MapPopup({
           sizes="320px"
         />
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-2 right-2 w-8 h-8 bg-tone-dark/60 text-tone-light flex items-center justify-center text-sm"
+          className="touch-target absolute top-2 right-2 inline-flex min-h-11 min-w-11 items-center justify-center bg-tone-dark/60 text-tone-light text-sm"
           aria-label="Close"
         >
           ×

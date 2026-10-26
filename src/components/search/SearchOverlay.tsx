@@ -66,9 +66,9 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.28 }}
-          className="fixed inset-0 z-[90] bg-background/97"
+          className="fixed inset-0 z-[90] bg-background/97 safe-x overflow-y-auto"
         >
-          <div className="max-w-2xl mx-auto px-6 pt-24">
+          <div className="mx-auto max-w-2xl px-6 pt-24 safe-top pb-8">
             <p className="travel-meta travel-meta-accent mb-4">Search the archive</p>
             <div className="flex items-center gap-4 border-b border-border pb-4">
               <Search size={20} strokeWidth={1.5} className="text-muted shrink-0" />

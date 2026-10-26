@@ -35,7 +35,12 @@ const navItems = [
   { href: "/studio/settings", label: "Settings", icon: Settings },
 ];
 
-export function StudioSidebar() {
+interface StudioSidebarProps {
+  className?: string;
+  onNavigate?: () => void;
+}
+
+export function StudioSidebar({ className, onNavigate }: StudioSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -53,7 +58,12 @@ export function StudioSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-card border-r border-border flex flex-col h-screen sticky top-0">
+    <aside
+      className={cn(
+        "flex h-screen w-64 shrink-0 flex-col border-r border-border bg-card sticky top-0",
+        className
+      )}
+    >
       <div className="p-6 border-b border-border">
         <p className="font-display text-xl">Studio</p>
         <p className="text-[10px] uppercase tracking-widest text-muted mt-1">Content Admin</p>
@@ -69,8 +79,9 @@ export function StudioSidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onNavigate}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 text-sm transition-colors rounded-sm",
+                "flex min-h-11 items-center gap-3 rounded-sm px-3 py-2.5 text-sm transition-colors",
                 active
                   ? "bg-ocean/10 text-ocean"
                   : "text-muted hover:text-foreground hover:bg-muted-bg"

@@ -2,11 +2,16 @@ export const ADMIN_COOKIE = "horizon-admin-session";
 const SESSION_MS = 7 * 24 * 60 * 60 * 1000;
 
 function getSessionSecret(): string {
-  return (
-    process.env.ADMIN_SESSION_SECRET ??
-    process.env.ADMIN_PASSWORD ??
-    "change-me-in-production"
-  );
+  const secret =
+    process.env.ADMIN_SESSION_SECRET?.trim() ??
+    process.env.ADMIN_PASSWORD?.trim();
+  if (secret) {
+    return secret;
+  }
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_SESSION_SECRET or ADMIN_PASSWORD must be set in production.");
+  }
+  return "dev-only-insecure-admin-secret";
 }
 
 async function hmacHex(message: string, secret: string): Promise<string> {

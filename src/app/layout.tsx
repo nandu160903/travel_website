@@ -60,7 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`dark ${spaceGrotesk.variable} ${geistMono.variable} ${caveat.variable} ${manrope.variable} ${cormorant.variable} ${syne.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col antialiased">
+      <body className="flex min-h-dvh flex-col antialiased safe-x overflow-x-clip">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

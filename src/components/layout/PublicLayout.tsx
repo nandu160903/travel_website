@@ -24,7 +24,7 @@ export async function PublicLayout({
         transparent={transparentHeader}
         heroImage={settings.heroImage}
       />
-      <main className="flex-1">{children}</main>
+      <main className="min-w-0 flex-1 overflow-x-clip">{children}</main>
       <Footer
         siteTitle={settings.siteTitle}
         socialLinks={socialLinks}

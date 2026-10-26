@@ -101,7 +101,7 @@ export function Hero({ heroImage, title, subtitle }: HeroProps) {
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-5xl"
           >
-            <h1 className="font-display text-[3.25rem] sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold uppercase tracking-tight text-tone-light leading-[0.92]">
+            <h1 className="font-display text-[clamp(2.125rem,10vw,3.25rem)] sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold uppercase tracking-tight text-tone-light leading-[0.92] break-words">
               {slide.title}
             </h1>
             <p className="mt-5 text-tone-light/75 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-sans">

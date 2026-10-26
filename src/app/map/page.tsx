@@ -22,7 +22,11 @@ export default async function MapPage() {
           title="Travel Map"
           subtitle="Every pin is a memory. Click to explore."
         />
-        <TravelMap locations={locations} height="75vh" mapboxToken={getMapboxToken()} />
+        <TravelMap
+          locations={locations}
+          height="min(75dvh, 780px)"
+          mapboxToken={getMapboxToken()}
+        />
       </section>
     </PublicLayout>
   );

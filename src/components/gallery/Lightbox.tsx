@@ -48,13 +48,14 @@ export function Lightbox({ photos, currentIndex, onClose, onNavigate }: Lightbox
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[100] bg-tone-dark/95 flex flex-col"
       >
-        <div className="flex items-center justify-between p-4 md:p-6">
+        <div className="flex items-center justify-between p-4 md:p-6 safe-top safe-x">
           <div className="text-tone-light/70 text-xs uppercase tracking-widest">
             {currentIndex + 1} / {photos.length}
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="text-tone-light/70 hover:text-tone-light transition-colors"
+            className="touch-target inline-flex items-center justify-center text-tone-light/70 hover:text-tone-light transition-colors"
             aria-label="Close lightbox"
           >
             <X size={24} />
@@ -63,8 +64,9 @@ export function Lightbox({ photos, currentIndex, onClose, onNavigate }: Lightbox
 
         <div className="flex-1 relative flex items-center justify-center px-4 md:px-16">
           <button
+            type="button"
             onClick={goPrev}
-            className="absolute left-4 md:left-8 text-tone-light/50 hover:text-tone-light transition-colors z-10"
+            className="touch-target absolute left-2 md:left-8 z-10 inline-flex items-center justify-center text-tone-light/50 hover:text-tone-light transition-colors"
             aria-label="Previous photo"
           >
             <ChevronLeft size={32} />
@@ -76,7 +78,7 @@ export function Lightbox({ photos, currentIndex, onClose, onNavigate }: Lightbox
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.4 }}
-            className="relative w-full max-w-5xl aspect-[4/3] md:aspect-auto md:h-[70vh]"
+            className="relative w-full max-w-5xl aspect-[4/3] max-h-[min(62dvh,520px)] md:max-h-none md:aspect-auto md:h-[70vh]"
           >
             <Image
               src={photo.url}
@@ -89,8 +91,9 @@ export function Lightbox({ photos, currentIndex, onClose, onNavigate }: Lightbox
           </motion.div>
 
           <button
+            type="button"
             onClick={goNext}
-            className="absolute right-4 md:right-8 text-tone-light/50 hover:text-tone-light transition-colors z-10"
+            className="touch-target absolute right-2 md:right-8 z-10 inline-flex items-center justify-center text-tone-light/50 hover:text-tone-light transition-colors"
             aria-label="Next photo"
           >
             <ChevronRight size={32} />
