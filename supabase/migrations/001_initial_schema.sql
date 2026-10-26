@@ -304,9 +304,9 @@ CREATE POLICY "Creator read subscribers" ON newsletter_subscribers
   FOR SELECT USING (is_creator());
 
 -- Storage bucket policies (run after creating 'media' bucket)
--- CREATE POLICY "Public read media" ON storage.objects FOR SELECT USING (bucket_id = 'media');
--- CREATE POLICY "Creator upload media" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'media' AND is_creator());
--- CREATE POLICY "Creator delete media" ON storage.objects FOR DELETE USING (bucket_id = 'media' AND is_creator());
+CREATE POLICY "Public read media" ON storage.objects FOR SELECT USING (bucket_id = 'media');
+CREATE POLICY "Creator upload media" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'media' AND is_creator());
+CREATE POLICY "Creator delete media" ON storage.objects FOR DELETE USING (bucket_id = 'media' AND is_creator());
 
 -- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION handle_new_user()

@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
-import { useAuthSession } from "@/hooks/useAuthSession";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -18,7 +16,6 @@ const WELCOME: ChatMessage = {
 
 export function TravelChatWidget() {
   const pathname = usePathname();
-  const { loading, authenticated, refresh } = useAuthSession();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
   const [input, setInput] = useState("");
@@ -30,12 +27,6 @@ export function TravelChatWidget() {
     pathname.startsWith("/auth") ||
     pathname.startsWith("/studio") ||
     pathname.startsWith("/vault");
-
-  useEffect(() => {
-    if (open) {
-      void refresh();
-    }
-  }, [open, refresh]);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
@@ -112,33 +103,23 @@ export function TravelChatWidget() {
               </button>
             </header>
 
-            <div ref={listRef} className="flex-1 max-h-[min(50vh,420px)] min-h-[240px] overflow-y-auto px-4 py-4 space-y-3">
-              {!loading && !authenticated ? (
-                <div className="rounded-xl border border-border bg-muted-bg/80 p-4 text-center">
-                  <p className="text-sm text-muted mb-3">Sign in to look up nearby places.</p>
-                  <Link
-                    href={`/auth?redirectTo=${encodeURIComponent(pathname || "/")}`}
-                    className="inline-flex adventure-pill bg-olive text-ink px-4 py-2 text-xs font-semibold"
-                    onClick={() => setOpen(false)}
-                  >
-                    Sign in
-                  </Link>
+            <div
+              ref={listRef}
+              className="flex-1 max-h-[min(50vh,420px)] min-h-[240px] overflow-y-auto px-4 py-4 space-y-3"
+            >
+              {messages.map((msg, i) => (
+                <div
+                  key={`${msg.role}-${i}`}
+                  className={cn(
+                    "max-w-[90%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
+                    msg.role === "user"
+                      ? "ml-auto bg-olive text-ink rounded-br-md"
+                      : "mr-auto bg-muted-bg text-foreground border border-border rounded-bl-md whitespace-pre-wrap"
+                  )}
+                >
+                  {msg.content}
                 </div>
-              ) : (
-                messages.map((msg, i) => (
-                  <div
-                    key={`${msg.role}-${i}`}
-                    className={cn(
-                      "max-w-[90%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
-                      msg.role === "user"
-                        ? "ml-auto bg-olive text-ink rounded-br-md"
-                        : "mr-auto bg-muted-bg text-foreground border border-border rounded-bl-md whitespace-pre-wrap"
-                    )}
-                  >
-                    {msg.content}
-                  </div>
-                ))
-              )}
+              ))}
               {sending && (
                 <div className="flex items-center gap-2 text-xs text-muted">
                   <Loader2 size={14} className="animate-spin" />
@@ -158,13 +139,13 @@ export function TravelChatWidget() {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={authenticated ? "Place name or “near …”" : "Sign in to search"}
-                disabled={!authenticated || sending}
+                placeholder="Place name or “near …”"
+                disabled={sending}
                 className="flex-1 adventure-pill border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-olive disabled:opacity-50"
               />
               <button
                 type="submit"
-                disabled={!authenticated || sending || !input.trim()}
+                disabled={sending || !input.trim()}
                 className="shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-olive text-ink disabled:opacity-40"
                 aria-label="Send message"
               >

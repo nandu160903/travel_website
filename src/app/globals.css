@@ -108,7 +108,22 @@
   --font-brand: var(--font-syne);
 }
 
-/* ── Normad on two wheels — minimal moto wordmark ── */
+/* ── Normad emblem — optional route reveal ── */
+@media (prefers-reduced-motion: no-preference) {
+  .normad-route-draw {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: normad-route-reveal 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+}
+
+@keyframes normad-route-reveal {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Normad on two wheels — minimal moto wordmark (legacy) ── */
 .brand-lockup {
   --brand-ink: var(--foreground);
   --brand-dim: color-mix(in srgb, var(--foreground) 55%, transparent);

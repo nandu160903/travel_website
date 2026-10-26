@@ -1,17 +1,6 @@
-import { Suspense } from "react";
-import { UserAuthForm } from "@/components/auth/UserAuthForm";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Sign in",
-  robots: { index: false, follow: false },
-};
-
+/** Public visitor sign-in is disabled; chat and search work without an account. */
 export default function AuthPage() {
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6 py-24">
-      <Suspense fallback={<div className="text-muted text-sm">Loading...</div>}>
-        <UserAuthForm />
-      </Suspense>
-    </div>
-  );
+  redirect("/");
 }

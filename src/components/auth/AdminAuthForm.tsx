@@ -154,9 +154,6 @@ export function AdminAuthForm() {
       </p>
 
       <p className="mt-8 text-center">
-        <Link href="/auth" className="text-xs text-muted hover:text-foreground mr-4">
-          User login
-        </Link>
         <Link href="/" className="text-xs text-muted hover:text-foreground">
           ← Back to site
         </Link>

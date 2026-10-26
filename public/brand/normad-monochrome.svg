@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img" aria-label="Normad emblem monochrome">
+  <path d="M 33 16 L 66 16 L 38 84 L 33 84 Z M 62 18 L 85 18 L 85 86 L 46 86 Z" fill="currentColor" opacity="0.28"/>
+  <path d="M 13 88 V 14 Q 13 10 17 10 H 27 Q 31 10 31 14 V 88 Q 31 92 27 92 H 17 Q 13 92 13 88 Z M 69 88 V 14 Q 69 10 73 10 H 83 Q 87 10 87 14 V 88 Q 87 92 83 92 H 73 Q 69 92 69 88 Z M 27 90 L 39 90 L 79 10 L 67 10 Z" fill="currentColor"/>
+  <path d="M 22 74 C 34 62 42 54 50 48 C 58 42 64 34 70 26" stroke="currentColor" stroke-width="2.85" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M 70 21 C 70 17 74 14 74 14 C 74 14 78 17 78 21 C 78 25 74 28 74 28 C 74 28 70 25 70 21 Z" fill="currentColor"/>
+</svg>
