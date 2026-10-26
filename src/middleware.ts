@@ -3,6 +3,12 @@ import { getSSRSession } from "supertokens-node/nextjs";
 import { updateSession } from "@/lib/supabase/middleware";
 import { isSupabaseConfigured } from "@/lib/utils";
 import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/studio/admin-session";
+import {
+  getStudioPaths,
+  internalPathToPublic,
+  isBlockedLegacyPath,
+  resolveInternalPathname,
+} from "@/lib/studio/paths";
 import { ensureSuperTokensInit } from "@/lib/supertokens/backend";
 import {
   isAdminConfigured,
@@ -10,15 +16,16 @@ import {
   resolveIsAdmin,
 } from "@/lib/supertokens/admin";
 
+function notFound() {
+  return new NextResponse(null, { status: 404 });
+}
+
 function isProtectedStudioPath(pathname: string) {
   return pathname.startsWith("/studio") && !pathname.startsWith("/studio/login");
 }
 
 function isProtectedApiPath(pathname: string) {
-  return (
-    pathname.startsWith("/api/studio/") &&
-    pathname !== "/api/studio/auth"
-  );
+  return pathname.startsWith("/api/studio/") && pathname !== "/api/studio/auth";
 }
 
 async function superTokensAdminAllowed(request: NextRequest): Promise<boolean> {
@@ -49,40 +56,66 @@ async function superTokensAdminAllowed(request: NextRequest): Promise<boolean> {
   return resolveIsAdmin(userId);
 }
 
+function rewriteInternal(request: NextRequest, internalPath: string) {
+  const url = request.nextUrl.clone();
+  url.pathname = internalPath;
+  return NextResponse.rewrite(url);
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const paths = getStudioPaths();
 
-  if (pathname === "/vault") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth/studio";
-    url.searchParams.set(
-      "redirectTo",
-      request.nextUrl.searchParams.get("redirect") ?? "/studio"
-    );
-    return NextResponse.redirect(url);
+  if (isBlockedLegacyPath(pathname)) {
+    return notFound();
   }
 
-  if (isSuperTokensEnabled() && (isProtectedStudioPath(pathname) || isProtectedApiPath(pathname))) {
+  if (pathname === "/sitemap.xml" && paths.sitemapPublic !== "/sitemap.xml") {
+    return notFound();
+  }
+
+  if (pathname === paths.sitemapPublic) {
+    return rewriteInternal(request, "/sitemap.xml");
+  }
+
+  const internalPath = resolveInternalPathname(pathname);
+  const effectivePath = internalPath ?? pathname;
+  const isAuthPage = effectivePath === "/auth/studio";
+
+  const touchesStudio =
+    internalPath !== null ||
+    isProtectedStudioPath(effectivePath) ||
+    isProtectedApiPath(effectivePath);
+
+  if (!touchesStudio) {
+    return NextResponse.next();
+  }
+
+  if (isSuperTokensEnabled() && !isAuthPage && (isProtectedStudioPath(effectivePath) || isProtectedApiPath(effectivePath))) {
     ensureSuperTokensInit();
 
     const allowed = await superTokensAdminAllowed(request);
     if (!allowed) {
-      if (isProtectedApiPath(pathname)) {
+      if (isProtectedApiPath(effectivePath)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
       const url = request.nextUrl.clone();
-      url.pathname = "/auth/studio";
-      url.searchParams.set("redirectTo", pathname);
+      url.pathname = paths.studioAuth;
+      url.searchParams.set("redirectTo", internalPathToPublic(effectivePath));
       if (isAdminConfigured() && (await getSSRSession(request.cookies.getAll())).hasToken) {
         url.searchParams.set("error", "not_admin");
       }
       return NextResponse.redirect(url);
     }
+
+    if (internalPath && internalPath !== pathname) {
+      return rewriteInternal(request, internalPath);
+    }
     return NextResponse.next();
   }
 
   if (isSupabaseConfigured()) {
-    if (isProtectedApiPath(pathname)) {
+    if (isProtectedApiPath(effectivePath)) {
       const { createServerClient } = await import("@supabase/ssr");
       const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -111,26 +144,51 @@ export async function middleware(request: NextRequest) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
     }
-    return updateSession(request);
+
+    if (!isAuthPage && isProtectedStudioPath(effectivePath)) {
+      const sessionResponse = await updateSession(request);
+      if (sessionResponse.status >= 300 && sessionResponse.status < 400) {
+        return sessionResponse;
+      }
+    }
+
+    if (internalPath && internalPath !== pathname) {
+      return rewriteInternal(request, internalPath);
+    }
+
+    return NextResponse.next();
   }
 
   const adminToken = request.cookies.get(ADMIN_COOKIE)?.value;
   const isAuthed = await verifyAdminToken(adminToken);
 
-  if (isProtectedApiPath(pathname) && !isAuthed) {
+  if (isProtectedApiPath(effectivePath) && !isAuthed) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (isProtectedStudioPath(pathname) && !isAuthed) {
+  if (isProtectedStudioPath(effectivePath) && !isAuthed) {
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/studio";
-    url.searchParams.set("redirectTo", pathname);
+    url.pathname = paths.studioAuth;
+    url.searchParams.set("redirectTo", internalPathToPublic(effectivePath));
     return NextResponse.redirect(url);
+  }
+
+  if (internalPath && internalPath !== pathname) {
+    return rewriteInternal(request, internalPath);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/studio/:path*", "/vault", "/api/studio/:path*"],
+  matcher: [
+    "/sitemap.xml",
+    "/studio/:path*",
+    "/auth/studio",
+    "/auth/studio/:path*",
+    "/vault",
+    "/vault/:path*",
+    "/api/studio/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)",
+  ],
 };

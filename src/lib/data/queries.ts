@@ -24,6 +24,7 @@ import {
   mapVideo,
   mapMapLocation,
 } from "./mappers";
+import { mapLocationsFromContent, mergeMapLocations } from "./map-locations";
 import {
   demoAboutPage,
   demoCities,
@@ -294,13 +295,33 @@ export async function getTimeline(): Promise<TimelineEntry[]> {
 }
 
 export async function getMapLocations(): Promise<MapLocation[]> {
+  const [destinations, cities, trips] = await Promise.all([
+    getDestinations(),
+    getCities(),
+    getTrips(),
+  ]);
+  const derived = mapLocationsFromContent({ destinations, cities, trips });
+
   const supabase = await getSupabaseClient();
   if (supabase) {
     const { data } = await supabase.from("map_locations").select("*");
-    if (data?.length) return data.map(mapMapLocation);
+    const manual = data?.length ? data.map(mapMapLocation) : [];
+    if (manual.length) {
+      return mergeMapLocations(manual, derived);
+    }
   }
+
   const store = await getActiveCmsStore();
-  return store?.mapLocations ?? demoMapLocations;
+  const manual = store?.mapLocations?.length ? store.mapLocations : [];
+  if (manual.length) {
+    return mergeMapLocations(manual, derived);
+  }
+
+  if (derived.length) {
+    return derived;
+  }
+
+  return demoMapLocations;
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {

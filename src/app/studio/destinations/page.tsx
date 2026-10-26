@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getStudioDestinations } from "@/lib/data/studio-queries";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 
 export default async function StudioDestinationsPage() {
   const destinations = await getStudioDestinations();
@@ -13,7 +14,7 @@ export default async function StudioDestinationsPage() {
           <h1 className="font-display text-3xl">Destinations</h1>
           <p className="text-muted text-sm mt-1">{destinations.length} destinations</p>
         </div>
-        <Link href="/studio/destinations/new">
+        <Link href={studioPagePath("/destinations/new")}>
           <Button size="sm">Add Destination</Button>
         </Link>
       </div>
@@ -22,7 +23,7 @@ export default async function StudioDestinationsPage() {
         {destinations.map((dest) => (
           <Link
             key={dest.id}
-            href={`/studio/destinations/${dest.slug}`}
+            href={studioPagePath(`/destinations/${dest.slug}`)}
             className="flex items-center justify-between p-4 border border-border hover:border-ocean transition-colors"
           >
             <div>

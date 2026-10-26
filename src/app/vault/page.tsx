@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CreatorAuthModal } from "@/components/creator/CreatorAuthModal";
@@ -9,7 +10,7 @@ export default function VaultPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(true);
-  const redirect = safeRedirectPath(searchParams.get("redirect"), "/studio");
+  const redirect = safeRedirectPath(searchParams.get("redirect"), studioPagePath());
 
   useEffect(() => {
     if (!open) {

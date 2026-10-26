@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState, useCallback } from "react";
 import { Upload, Search, Trash2 } from "lucide-react";
 
@@ -35,7 +36,7 @@ export default function StudioMediaPage() {
       const formData = new FormData();
       Array.from(files).forEach((f) => formData.append("files", f));
 
-      const res = await fetch("/api/studio/media", {
+      const res = await fetch(studioApiPath("/media"), {
         method: "POST",
         body: formData,
       });

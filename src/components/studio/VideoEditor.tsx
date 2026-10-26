@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
@@ -27,7 +28,7 @@ export function VideoEditor({ initial }: VideoEditorProps) {
     setSaving(true);
     setError("");
     try {
-      const res = await fetch("/api/studio/videos", {
+      const res = await fetch(studioApiPath("/videos"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -46,7 +47,7 @@ export function VideoEditor({ initial }: VideoEditorProps) {
         const data = await res.json();
         throw new Error(data.error ?? "Save failed");
       }
-      router.push("/studio/videos");
+      router.push(studioPagePath("/videos"));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
@@ -57,9 +58,9 @@ export function VideoEditor({ initial }: VideoEditorProps) {
 
   const remove = async () => {
     if (!initial || !confirm("Delete this video?")) return;
-    const res = await fetch(`/api/studio/videos?id=${encodeURIComponent(initial.id)}`, { method: "DELETE" });
+    const res = await fetch(studioApiPath(`/videos?id=${encodeURIComponent(initial.id)}`), { method: "DELETE" });
     if (res.ok) {
-      router.push("/studio/videos");
+      router.push(studioPagePath("/videos"));
       router.refresh();
     }
   };

@@ -21,18 +21,19 @@ import Session from "supertokens-auth-react/recipe/session";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/utils";
 import { isSuperTokensEnabled } from "@/lib/supertokens/admin";
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 
 const navItems = [
-  { href: "/studio", label: "Overview", icon: LayoutDashboard },
-  { href: "/studio/trips", label: "Journeys", icon: Plane },
-  { href: "/studio/about", label: "About Page", icon: UserRound },
-  { href: "/studio/destinations", label: "Destinations", icon: MapPin },
-  { href: "/studio/stories", label: "Stories", icon: BookOpen },
-  { href: "/studio/photos", label: "Photos", icon: Camera },
-  { href: "/studio/videos", label: "Videos", icon: Video },
-  { href: "/studio/map", label: "Map", icon: Map },
-  { href: "/studio/media", label: "Media", icon: FolderOpen },
-  { href: "/studio/settings", label: "Settings", icon: Settings },
+  { subpath: "", label: "Overview", icon: LayoutDashboard },
+  { subpath: "/trips", label: "Journeys", icon: Plane },
+  { subpath: "/about", label: "About Page", icon: UserRound },
+  { subpath: "/destinations", label: "Destinations", icon: MapPin },
+  { subpath: "/stories", label: "Stories", icon: BookOpen },
+  { subpath: "/photos", label: "Photos", icon: Camera },
+  { subpath: "/videos", label: "Videos", icon: Video },
+  { subpath: "/map", label: "Map", icon: Map },
+  { subpath: "/media", label: "Media", icon: FolderOpen },
+  { subpath: "/settings", label: "Settings", icon: Settings },
 ];
 
 interface StudioSidebarProps {
@@ -43,6 +44,7 @@ interface StudioSidebarProps {
 export function StudioSidebar({ className, onNavigate }: StudioSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const studioHome = studioPagePath();
 
   const handleLogout = async () => {
     if (isSuperTokensEnabled()) {
@@ -51,7 +53,7 @@ export function StudioSidebar({ className, onNavigate }: StudioSidebarProps) {
       const supabase = createClient();
       await supabase.auth.signOut();
     } else {
-      await fetch("/api/studio/auth", { method: "DELETE" });
+      await fetch(studioApiPath("/auth"), { method: "DELETE" });
     }
     router.push("/");
     router.refresh();
@@ -72,13 +74,13 @@ export function StudioSidebar({ className, onNavigate }: StudioSidebarProps) {
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
+          const href = studioPagePath(item.subpath);
           const active =
-            pathname === item.href ||
-            (item.href !== "/studio" && pathname.startsWith(item.href));
+            pathname === href || (href !== studioHome && pathname.startsWith(href));
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={item.subpath || "home"}
+              href={href}
               onClick={onNavigate}
               className={cn(
                 "flex min-h-11 items-center gap-3 rounded-sm px-3 py-2.5 text-sm transition-colors",

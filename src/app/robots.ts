@@ -1,15 +1,11 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/lib/utils";
 
+/** Minimal robots.txt — no disallowed paths or sitemap URL (avoids leaking admin/obscured routes). */
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: ["/studio/", "/vault", "/api/"],
-      },
-    ],
-    sitemap: absoluteUrl("/sitemap.xml"),
+    rules: {
+      userAgent: "*",
+      allow: "/",
+    },
   };
 }

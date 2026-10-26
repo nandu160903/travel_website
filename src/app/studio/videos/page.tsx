@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getStudioVideos } from "@/lib/data/studio-queries";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 
 export default async function StudioVideosPage() {
   const videos = await getStudioVideos();
@@ -10,7 +11,7 @@ export default async function StudioVideosPage() {
     <div className="p-8 md:p-10 max-w-5xl">
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-display text-3xl">Videos</h1>
-        <Link href="/studio/videos/new">
+        <Link href={studioPagePath("/videos/new")}>
           <Button size="sm">Add Video</Button>
         </Link>
       </div>
@@ -18,7 +19,7 @@ export default async function StudioVideosPage() {
         {videos.map((video) => (
           <Link
             key={video.id}
-            href={`/studio/videos/${video.id}`}
+            href={studioPagePath(`/videos/${video.id}`)}
             className="flex items-center gap-4 p-4 border border-border hover:border-ocean transition-colors"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}

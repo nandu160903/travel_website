@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
@@ -45,7 +46,7 @@ export function MapLocationManager({ locations: initial }: MapLocationManagerPro
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/studio/map-locations", {
+      const res = await fetch(studioApiPath("/map-locations"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -68,7 +69,7 @@ export function MapLocationManager({ locations: initial }: MapLocationManagerPro
 
   const remove = async (id: string) => {
     if (!confirm("Remove this map pin?")) return;
-    await fetch(`/api/studio/map-locations?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    await fetch(studioApiPath(`/map-locations?id=${encodeURIComponent(id)}`), { method: "DELETE" });
     setLocations((prev) => prev.filter((l) => l.id !== id));
     router.refresh();
   };

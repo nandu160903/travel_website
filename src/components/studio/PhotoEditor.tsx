@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
@@ -25,7 +26,7 @@ export function PhotoEditor({ initial }: PhotoEditorProps) {
     setSaving(true);
     setError("");
     try {
-      const res = await fetch("/api/studio/photos", {
+      const res = await fetch(studioApiPath("/photos"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -42,7 +43,7 @@ export function PhotoEditor({ initial }: PhotoEditorProps) {
         const data = await res.json();
         throw new Error(data.error ?? "Save failed");
       }
-      router.push("/studio/photos");
+      router.push(studioPagePath("/photos"));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
@@ -53,9 +54,9 @@ export function PhotoEditor({ initial }: PhotoEditorProps) {
 
   const remove = async () => {
     if (!initial || !confirm("Delete this photo?")) return;
-    const res = await fetch(`/api/studio/photos?id=${encodeURIComponent(initial.id)}`, { method: "DELETE" });
+    const res = await fetch(studioApiPath(`/photos?id=${encodeURIComponent(initial.id)}`), { method: "DELETE" });
     if (res.ok) {
-      router.push("/studio/photos");
+      router.push(studioPagePath("/photos"));
       router.refresh();
     }
   };

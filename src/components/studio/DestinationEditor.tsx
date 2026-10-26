@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
@@ -33,7 +34,7 @@ export function DestinationEditor({ initial }: DestinationEditorProps) {
     setSaving(true);
     setError("");
     try {
-      const res = await fetch("/api/studio/destinations", {
+      const res = await fetch(studioApiPath("/destinations"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -51,7 +52,7 @@ export function DestinationEditor({ initial }: DestinationEditorProps) {
         const data = await res.json();
         throw new Error(data.error ?? "Save failed");
       }
-      router.push("/studio/destinations");
+      router.push(studioPagePath("/destinations"));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
@@ -62,11 +63,11 @@ export function DestinationEditor({ initial }: DestinationEditorProps) {
 
   const remove = async () => {
     if (!initial || !confirm("Delete this destination?")) return;
-    const res = await fetch(`/api/studio/destinations?slug=${encodeURIComponent(slug)}`, {
+    const res = await fetch(studioApiPath(`/destinations?slug=${encodeURIComponent(slug)}`), {
       method: "DELETE",
     });
     if (res.ok) {
-      router.push("/studio/destinations");
+      router.push(studioPagePath("/destinations"));
       router.refresh();
     }
   };

@@ -6,6 +6,7 @@ import type {
   Trip,
   Video,
 } from "@/types";
+import { normalizeCoordinates } from "./map-locations";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapDestination(row: any): Destination {
@@ -131,12 +132,16 @@ export function mapVideo(row: any): Video {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapMapLocation(row: any) {
+  const coordinates = normalizeCoordinates(row.coordinates) ?? {
+    lat: Number(row.coordinates?.lat ?? 0),
+    lng: Number(row.coordinates?.lng ?? 0),
+  };
   return {
     id: row.id,
     name: row.name,
     type: row.type,
-    coordinates: row.coordinates,
-    coverImage: row.cover_image ?? row.coverImage,
+    coordinates,
+    coverImage: row.cover_image ?? row.coverImage ?? "",
     description: row.description ?? "",
     visitDate: row.visit_date ?? row.visitDate,
     destinationSlug: row.destination_slug ?? row.destinationSlug,

@@ -494,6 +494,28 @@ body::before {
   color: var(--trail);
 }
 
+/* Mapbox HTML markers (outside Tailwind tree) */
+.normad-map-pin {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid #f4f0e7;
+  border-radius: 9999px;
+  background: #b2d157;
+  box-shadow:
+    0 0 0 4px rgba(178, 209, 87, 0.35),
+    0 2px 8px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.normad-map-pin:hover,
+.normad-map-pin:focus-visible {
+  transform: scale(1.2);
+  outline: none;
+}
+
 .mapboxgl-popup-content {
   background: var(--card) !important;
   color: var(--foreground) !important;

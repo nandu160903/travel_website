@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { AboutPageContent } from "@/types";
@@ -27,7 +28,7 @@ export function AboutPageEditor({ initial }: AboutPageEditorProps) {
     setSaving(true);
     setMessage("");
     try {
-      const res = await fetch("/api/studio/about", {
+      const res = await fetch(studioApiPath("/about"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(content),

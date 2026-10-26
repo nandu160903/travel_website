@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
@@ -8,17 +8,39 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import type { MapLocation } from "@/types";
 import { siteConfig } from "@/lib/config";
+import { isValidCoordinates } from "@/lib/data/map-locations";
 import { cn } from "@/lib/utils";
 
 type MapFilter = "all" | "country" | "city" | "trip" | "story";
+
+const PLACES_SOURCE = "normad-places";
+const PLACES_LAYER = "normad-places-circles";
 
 interface TravelMapProps {
   locations: MapLocation[];
   className?: string;
   interactive?: boolean;
   height?: string;
-  /** Prefer passing from a Server Component so the token is read from `.env` at runtime. */
   mapboxToken?: string;
+}
+
+function locationsToGeoJson(locations: MapLocation[]): GeoJSON.FeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: locations.map((loc) => ({
+      type: "Feature",
+      id: loc.id,
+      geometry: {
+        type: "Point",
+        coordinates: [loc.coordinates.lng, loc.coordinates.lat],
+      },
+      properties: {
+        id: loc.id,
+        name: loc.name,
+        type: loc.type,
+      },
+    })),
+  };
 }
 
 export function TravelMap({
@@ -30,6 +52,7 @@ export function TravelMap({
 }: TravelMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const locationsByIdRef = useRef<Map<string, MapLocation>>(new Map());
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [filter, setFilter] = useState<MapFilter>("all");
   const [mapReady, setMapReady] = useState(false);
@@ -38,12 +61,27 @@ export function TravelMap({
 
   const mapboxToken = (mapboxTokenProp ?? siteConfig.mapboxToken ?? "").trim();
 
-  const filtered =
-    filter === "all" ? locations : locations.filter((l) => l.type === filter);
+  const validLocations = useMemo(
+    () => locations.filter((l) => isValidCoordinates(l.coordinates)),
+    [locations]
+  );
+
+  const filtered = useMemo(
+    () =>
+      filter === "all"
+        ? validLocations
+        : validLocations.filter((l) => l.type === filter),
+    [filter, validLocations]
+  );
+
+  useEffect(() => {
+    locationsByIdRef.current = new Map(filtered.map((loc) => [loc.id, loc]));
+  }, [filtered]);
 
   useEffect(() => {
     if (!mapContainer.current || !mapboxToken) return;
 
+    let cancelled = false;
     setMapError(null);
     mapboxgl.accessToken = mapboxToken;
 
@@ -54,20 +92,77 @@ export function TravelMap({
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: mapStyle,
-      center: [20, 30],
-      zoom: 1.5,
-      projection: "globe",
+      center: [78, 22],
+      zoom: 2.2,
       interactive,
       cooperativeGestures: coarsePointer,
     });
 
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-    map.on("load", () => {
-      map.setFog({});
+    const onPlaceClick = (event: mapboxgl.MapLayerMouseEvent) => {
+      const feature = event.features?.[0];
+      const id = feature?.properties?.id as string | undefined;
+      if (!id) return;
+      const loc = locationsByIdRef.current.get(id);
+      if (!loc) return;
+      setSelected(loc);
+      map.flyTo({
+        center: [loc.coordinates.lng, loc.coordinates.lat],
+        zoom: Math.max(map.getZoom(), 5),
+        duration: 1200,
+      });
+    };
+
+    const markReady = () => {
+      if (cancelled) return;
       map.resize();
       setMapReady(true);
+    };
+
+    map.on("load", () => {
+      if (cancelled) return;
+
+      map.addSource(PLACES_SOURCE, {
+        type: "geojson",
+        data: locationsToGeoJson([]),
+      });
+
+      map.addLayer({
+        id: PLACES_LAYER,
+        type: "circle",
+        source: PLACES_SOURCE,
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            1,
+            5,
+            5,
+            10,
+            10,
+            14,
+          ],
+          "circle-color": "#B2D157",
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#F4F0E7",
+          "circle-opacity": 0.95,
+        },
+      });
+
+      map.on("click", PLACES_LAYER, onPlaceClick);
+      map.on("mouseenter", PLACES_LAYER, () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", PLACES_LAYER, () => {
+        map.getCanvas().style.cursor = "";
+      });
+
+      markReady();
     });
+
+    map.on("idle", markReady);
 
     map.on("error", (event) => {
       const message =
@@ -80,6 +175,8 @@ export function TravelMap({
     mapRef.current = map;
 
     return () => {
+      cancelled = true;
+      map.off("click", PLACES_LAYER, onPlaceClick);
       map.remove();
       mapRef.current = null;
       setMapReady(false);
@@ -89,44 +186,50 @@ export function TravelMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
-    const resize = () => map.resize();
-    window.addEventListener("resize", resize);
-    window.addEventListener("orientationchange", resize);
-    return () => {
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("orientationchange", resize);
-    };
-  }, [mapReady]);
+
+    const source = map.getSource(PLACES_SOURCE) as mapboxgl.GeoJSONSource | undefined;
+    if (!source) return;
+
+    source.setData(locationsToGeoJson(filtered));
+
+    if (filtered.length === 0) {
+      return;
+    }
+
+    if (filtered.length === 1) {
+      const loc = filtered[0];
+      map.jumpTo({
+        center: [loc.coordinates.lng, loc.coordinates.lat],
+        zoom: 4.5,
+      });
+      return;
+    }
+
+    const bounds = new mapboxgl.LngLatBounds();
+    filtered.forEach((loc) => {
+      bounds.extend([loc.coordinates.lng, loc.coordinates.lat]);
+    });
+
+    try {
+      map.fitBounds(bounds, { padding: 80, maxZoom: 5.5, duration: 0 });
+    } catch {
+      /* ignore invalid bounds */
+    }
+  }, [filtered, mapReady]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
-
-    const markers: mapboxgl.Marker[] = [];
-
-    filtered.forEach((loc) => {
-      const el = document.createElement("div");
-      el.className =
-        "w-3.5 h-3.5 md:w-2.5 md:h-2.5 bg-trail border border-paper rotate-45 cursor-pointer hover:scale-125 transition-transform duration-200 shadow-sm";
-      el.setAttribute("role", "button");
-      el.setAttribute("aria-label", `Show ${loc.name}`);
-      el.addEventListener("click", () => {
-        setSelected(loc);
-        map.flyTo({
-          center: [loc.coordinates.lng, loc.coordinates.lat],
-          zoom: 5,
-          duration: 2000,
-        });
-      });
-
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat([loc.coordinates.lng, loc.coordinates.lat])
-        .addTo(map);
-      markers.push(marker);
-    });
-
-    return () => markers.forEach((m) => m.remove());
-  }, [filtered, mapReady]);
+    const resize = () => map.resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("orientationchange", resize);
+    const t = window.setTimeout(resize, 200);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("orientationchange", resize);
+    };
+  }, [mapReady]);
 
   const filters: { key: MapFilter; label: string }[] = [
     { key: "all", label: "All" },
@@ -152,6 +255,7 @@ export function TravelMap({
             {filtered.slice(0, 6).map((loc) => (
               <button
                 key={loc.id}
+                type="button"
                 onClick={() => setSelected(loc)}
                 className="text-left p-3 border border-border bg-card hover:border-ocean transition-colors"
               >
@@ -177,6 +281,7 @@ export function TravelMap({
         {filters.map((f) => (
           <button
             key={f.key}
+            type="button"
             onClick={() => setFilter(f.key)}
             className={cn(
               "min-h-11 px-3 py-2 text-[10px] uppercase tracking-widest transition-colors",
@@ -190,7 +295,20 @@ export function TravelMap({
         ))}
       </div>
 
-      <div ref={mapContainer} style={{ height }} className="w-full min-h-[240px]" />
+      {validLocations.length === 0 && (
+        <div className="absolute top-16 left-4 right-4 z-10 rounded-lg border border-border bg-card/95 px-4 py-3 text-sm text-muted">
+          No map pins yet. In Studio, add latitude/longitude on destinations or journeys, or add
+          pins under <span className="text-foreground">Studio → Map</span>.
+        </div>
+      )}
+
+      {validLocations.length > 0 && (
+        <div className="absolute top-16 right-4 z-10 rounded-lg border border-border bg-card/90 px-3 py-1.5 text-[10px] uppercase tracking-wider text-muted">
+          {filtered.length} place{filtered.length === 1 ? "" : "s"}
+        </div>
+      )}
+
+      <div ref={mapContainer} style={{ height }} className="w-full min-h-[280px]" />
 
       {mapError && (
         <div className="absolute inset-0 z-[5] flex items-center justify-center bg-tone-dark/90 p-6 text-center">
@@ -225,7 +343,13 @@ function MapPopup({
     ? `/destinations/${location.destinationSlug}`
     : location.storySlug
       ? `/stories/${location.storySlug}`
-      : "#";
+      : location.tripSlug
+        ? `/journeys/${location.tripSlug}`
+        : "#";
+
+  const cover =
+    location.coverImage?.trim() ||
+    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80";
 
   return (
     <motion.div
@@ -236,7 +360,7 @@ function MapPopup({
     >
       <div className="relative h-40">
         <Image
-          src={location.coverImage}
+          src={cover}
           alt={location.name}
           fill
           className="object-cover"
@@ -258,12 +382,14 @@ function MapPopup({
           <p className="text-xs text-muted mt-1">{location.visitDate}</p>
         )}
         <p className="text-sm text-muted mt-3 line-clamp-2">{location.description}</p>
-        <Link
-          href={href}
-          className="inline-block mt-4 travel-meta text-trail hover:text-terrain transition-colors"
-        >
-          Explore →
-        </Link>
+        {href !== "#" && (
+          <Link
+            href={href}
+            className="inline-block mt-4 travel-meta text-trail hover:text-terrain transition-colors"
+          >
+            Explore →
+          </Link>
+        )}
       </div>
     </motion.div>
   );

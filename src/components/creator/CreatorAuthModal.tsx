@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/utils";
 import { safeRedirectPath } from "@/lib/security/safeRedirect";
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 
 interface CreatorAuthModalProps {
   open: boolean;
@@ -17,9 +18,9 @@ interface CreatorAuthModalProps {
 export function CreatorAuthModal({
   open,
   onClose,
-  redirectTo: redirectProp = "/studio",
+  redirectTo: redirectProp,
 }: CreatorAuthModalProps) {
-  const redirectTo = safeRedirectPath(redirectProp, "/studio");
+  const redirectTo = safeRedirectPath(redirectProp, studioPagePath());
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +46,7 @@ export function CreatorAuthModal({
           return;
         }
       } else {
-        const res = await fetch("/api/studio/auth", {
+        const res = await fetch(studioApiPath("/auth"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password }),

@@ -6,6 +6,7 @@ import {
   getStudioStories,
 } from "@/lib/data/studio-queries";
 import { formatDate } from "@/lib/utils";
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 
 export default async function StudioDashboard() {
   const [stats, stories, photos] = await Promise.all([
@@ -35,7 +36,7 @@ export default async function StudioDashboard() {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-xl">Recent Stories</h2>
-            <Link href="/studio/stories" className="text-xs uppercase tracking-widest text-ocean hover:text-gold">
+            <Link href={studioPagePath("/stories")} className="text-xs uppercase tracking-widest text-ocean hover:text-gold">
               View All
             </Link>
           </div>
@@ -43,7 +44,7 @@ export default async function StudioDashboard() {
             {recent.map((story) => (
               <Link
                 key={story.id}
-                href={`/studio/stories/${story.slug}`}
+                href={studioPagePath(`/stories/${story.slug}`)}
                 className="block p-4 border border-border hover:border-ocean transition-colors"
               >
                 <p className="font-medium">{story.title}</p>
@@ -58,7 +59,7 @@ export default async function StudioDashboard() {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-xl">Drafts</h2>
-            <Link href="/studio/stories/new" className="text-xs uppercase tracking-widest text-ocean hover:text-gold">
+            <Link href={studioPagePath("/stories/new")} className="text-xs uppercase tracking-widest text-ocean hover:text-gold">
               New Story
             </Link>
           </div>
@@ -67,7 +68,7 @@ export default async function StudioDashboard() {
               {drafts.map((story) => (
                 <Link
                   key={story.id}
-                  href={`/studio/stories/${story.slug}`}
+                  href={studioPagePath(`/stories/${story.slug}`)}
                   className="block p-4 border border-border hover:border-ocean transition-colors"
                 >
                   <p className="font-medium">{story.title}</p>
@@ -82,7 +83,7 @@ export default async function StudioDashboard() {
           <h2 className="font-display text-xl mt-8 mb-4">Latest Photos</h2>
           <div className="grid grid-cols-4 gap-2">
             {photos.slice(0, 4).map((photo) => (
-              <Link key={photo.id} href={`/studio/photos/${photo.id}`} className="aspect-square bg-muted-bg overflow-hidden">
+              <Link key={photo.id} href={studioPagePath(`/photos/${photo.id}`)} className="aspect-square bg-muted-bg overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={photo.url} alt="" className="w-full h-full object-cover" />
               </Link>

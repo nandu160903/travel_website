@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getStudioPaths, internalPathToPublic, resolveInternalPathname } from "@/lib/studio/paths";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -29,14 +30,17 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const internal =
+    resolveInternalPathname(request.nextUrl.pathname) ?? request.nextUrl.pathname;
+
   const isStudioRoute =
-    request.nextUrl.pathname.startsWith("/studio") &&
-    !request.nextUrl.pathname.startsWith("/studio/login");
+    internal.startsWith("/studio") && !internal.startsWith("/studio/login");
 
   if (isStudioRoute && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/vault";
-    url.searchParams.set("redirect", request.nextUrl.pathname);
+    const paths = getStudioPaths();
+    url.pathname = paths.studioAuth;
+    url.searchParams.set("redirectTo", internalPathToPublic(internal));
     return NextResponse.redirect(url);
   }
 

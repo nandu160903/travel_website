@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { SiteSettings } from "@/types";
@@ -30,7 +31,7 @@ export function SettingsForm({ initial }: SettingsFormProps) {
     setSaving(true);
     setMessage("");
     try {
-      const res = await fetch("/api/studio/settings", {
+      const res = await fetch(studioApiPath("/settings"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(settings),

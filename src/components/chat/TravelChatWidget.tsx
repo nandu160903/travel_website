@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
+import { getStudioPaths } from "@/lib/studio/paths";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -23,10 +24,11 @@ export function TravelChatWidget() {
   const [error, setError] = useState("");
   const listRef = useRef<HTMLDivElement>(null);
 
+  const { studioBase, studioAuth } = getStudioPaths();
   const hiddenRoute =
     pathname.startsWith("/auth") ||
-    pathname.startsWith("/studio") ||
-    pathname.startsWith("/vault");
+    pathname.startsWith(studioBase) ||
+    pathname.startsWith(studioAuth);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });

@@ -7,13 +7,14 @@ import { signIn, signUp } from "supertokens-auth-react/recipe/emailpassword";
 import Session from "supertokens-auth-react/recipe/session";
 import { Button } from "@/components/ui/Button";
 import { safeRedirectPath } from "@/lib/security/safeRedirect";
+import { studioPagePath } from "@/lib/studio/paths";
 
 type Mode = "signin" | "signup";
 
 export function AdminAuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = safeRedirectPath(searchParams.get("redirectTo"), "/studio");
+  const redirectTo = safeRedirectPath(searchParams.get("redirectTo"), studioPagePath());
   const errorParam = searchParams.get("error");
 
   const [mode, setMode] = useState<Mode>("signin");

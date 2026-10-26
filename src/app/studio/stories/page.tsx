@@ -3,6 +3,7 @@ import { getStudioStories } from "@/lib/data/studio-queries";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 
 export default async function StudioStoriesPage() {
   const stories = await getStudioStories();
@@ -14,7 +15,7 @@ export default async function StudioStoriesPage() {
           <h1 className="font-display text-3xl">Stories</h1>
           <p className="text-muted text-sm mt-1">{stories.length} total</p>
         </div>
-        <Link href="/studio/stories/new">
+        <Link href={studioPagePath("/stories/new")}>
           <Button size="sm">New Story</Button>
         </Link>
       </div>
@@ -25,7 +26,7 @@ export default async function StudioStoriesPage() {
             key={story.id}
             className="flex items-center justify-between p-4 border border-border hover:border-ocean transition-colors group"
           >
-            <Link href={`/studio/stories/${story.slug}`} className="flex-1 min-w-0">
+            <Link href={studioPagePath(`/stories/${story.slug}`)} className="flex-1 min-w-0">
               <p className="font-medium group-hover:text-ocean transition-colors">{story.title}</p>
               <p className="text-xs text-muted mt-1">
                 {story.destinationName || "No destination"} · {story.publishedAt ? formatDate(story.publishedAt) : "Unpublished"}

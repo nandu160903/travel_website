@@ -3,6 +3,7 @@ import { getStudioTrips } from "@/lib/data/studio-queries";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 
 export default async function StudioTripsPage() {
   const trips = await getStudioTrips();
@@ -14,7 +15,7 @@ export default async function StudioTripsPage() {
           <h1 className="font-display text-3xl">Journeys</h1>
           <p className="text-muted text-sm mt-1">Manage your trips and journeys</p>
         </div>
-        <Link href="/studio/trips/new">
+        <Link href={studioPagePath("/trips/new")}>
           <Button size="sm">New Trip</Button>
         </Link>
       </div>
@@ -23,7 +24,7 @@ export default async function StudioTripsPage() {
         {trips.map((trip) => (
           <Link
             key={trip.id}
-            href={`/studio/trips/${trip.slug}`}
+            href={studioPagePath(`/trips/${trip.slug}`)}
             className="flex items-center justify-between p-4 border border-border hover:border-ocean transition-colors"
           >
             <div>

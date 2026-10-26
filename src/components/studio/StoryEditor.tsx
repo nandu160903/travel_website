@@ -1,5 +1,6 @@
 "use client";
 
+import { studioApiPath, studioPagePath } from "@/lib/studio/paths";
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { RichTextEditor } from "./RichTextEditor";
@@ -37,11 +38,11 @@ export function StoryEditor({ initialStory }: StoryEditorProps) {
 
   const handleDelete = async () => {
     if (!initialStory || !confirm("Delete this story?")) return;
-    const res = await fetch(`/api/studio/stories?slug=${encodeURIComponent(slug)}`, {
+    const res = await fetch(studioApiPath(`/stories?slug=${encodeURIComponent(slug)}`), {
       method: "DELETE",
     });
     if (res.ok) {
-      router.push("/studio/stories");
+      router.push(studioPagePath("/stories"));
       router.refresh();
     }
   };
@@ -50,7 +51,7 @@ export function StoryEditor({ initialStory }: StoryEditorProps) {
     setSaving(true);
     setStatus(newStatus);
     try {
-      const res = await fetch("/api/studio/stories", {
+      const res = await fetch(studioApiPath("/stories"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -66,7 +67,7 @@ export function StoryEditor({ initialStory }: StoryEditorProps) {
       });
       if (res.ok) {
         setSavedAt(new Date().toLocaleTimeString());
-        if (!initialStory) router.push("/studio/stories");
+        if (!initialStory) router.push(studioPagePath("/stories"));
       }
     } finally {
       setSaving(false);
