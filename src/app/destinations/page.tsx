@@ -2,11 +2,12 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { SectionHeading } from "@/components/animation/SectionHeading";
 import { DestinationCard } from "@/components/cards/DestinationCard";
 import { getDestinations } from "@/lib/data/queries";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "Destinations — Horizon Journal",
-  description: "Explore every destination documented on this journey.",
+  title: seoPageTitle("Destinations"),
+  description: "Regions and routes I keep returning to on two wheels across India.",
   path: "/destinations",
 });
 
@@ -21,7 +22,7 @@ export default async function DestinationsPage() {
         <SectionHeading
           label="Atlas"
           title="Destinations"
-          subtitle="Every country, every city — a visual explorer of places visited."
+          subtitle="States, valleys, and cities — where the bike has been and what each place taught me."
         />
 
         {featured.length > 0 && (

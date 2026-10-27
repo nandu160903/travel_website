@@ -5,6 +5,7 @@ import { StoryCard } from "@/components/cards/StoryCard";
 import { Badge } from "@/components/ui/Badge";
 import { getDestination, getCity, getStories } from "@/lib/data/queries";
 import { formatCoordinates } from "@/lib/utils";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 interface CityPageProps {
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: CityPageProps) {
   if (!city || !dest) return {};
 
   return createMetadata({
-    title: `${city.name}, ${dest.name} — Horizon Journal`,
+    title: seoPageTitle(`${city.name}, ${dest.name}`),
     description: city.description,
     path: `/destinations/${slug}/${citySlug}`,
     image: city.coverImage,

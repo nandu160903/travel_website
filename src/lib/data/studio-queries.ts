@@ -34,7 +34,15 @@ import {
 
 async function getSupabaseClient() {
   if (!isSupabaseConfigured()) return null;
+  const { createStudioSupabaseClient, isServiceRoleConfigured } = await import(
+    "@/lib/supabase/studio-client"
+  );
   const { createClient } = await import("@/lib/supabase/server");
+
+  if (isServiceRoleConfigured()) {
+    return createStudioSupabaseClient();
+  }
+
   return createClient();
 }
 

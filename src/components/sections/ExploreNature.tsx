@@ -7,23 +7,23 @@ import { Reveal } from "@/components/animation/Reveal";
 
 const hotspots = [
   {
-    id: "canopy",
-    label: "Old-growth canopy",
-    body: "Centuries of moss, filtered light, and quiet — the kind of forest that slows your pace naturally.",
+    id: "pass",
+    label: "High pass",
+    body: "Switchbacks, loose gravel, and views that make you forget the cold fingers on the levers.",
     x: 58,
     y: 32,
   },
   {
-    id: "stream",
-    label: "Hidden stream",
-    body: "A clear ribbon of water cutting through ferns — ideal for a mid-hike pause and refill.",
+    id: "dhaba",
+    label: "Roadside dhaba",
+    body: "Paratha, chai, and ten minutes off the bike — where route gossip is better than any map app.",
     x: 72,
     y: 55,
   },
   {
-    id: "ridge",
-    label: "Ridge overlook",
-    body: "Break through the tree line for wide views and the first breath of alpine air.",
+    id: "ghats",
+    label: "Western Ghats",
+    body: "Monsoon mist on the tarmac, tea estates on the shoulder, and corners that demand respect.",
     x: 48,
     y: 68,
   },
@@ -39,7 +39,7 @@ export function ExploreNature() {
         <Reveal>
           <div className="text-center mb-10 md:mb-14">
             <h2 className="font-serif-heading text-3xl md:text-4xl lg:text-[2.75rem] text-foreground">
-              Moments From the Trail
+              Moments From the Ride
             </h2>
             <div className="mx-auto mt-4 h-0.5 w-12 bg-olive" />
           </div>
@@ -49,7 +49,7 @@ export function ExploreNature() {
           <div className="relative aspect-[16/9] md:aspect-[21/9] min-h-[320px] overflow-hidden rounded-sm">
             <Image
               src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=2000&q=85"
-              alt="Dense forest"
+              alt="Mountain road through forest"
               fill
               className="object-cover"
               sizes="100vw"

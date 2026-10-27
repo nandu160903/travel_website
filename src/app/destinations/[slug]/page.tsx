@@ -12,6 +12,7 @@ import {
   getDestinations,
 } from "@/lib/data/queries";
 import { formatCoordinates } from "@/lib/utils";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata, destinationJsonLd, breadcrumbJsonLd } from "@/lib/seo/metadata";
 
 interface DestinationPageProps {
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: DestinationPageProps) {
   if (!dest) return {};
 
   return createMetadata({
-    title: dest.seoTitle ?? `${dest.name} — Horizon Journal`,
+    title: dest.seoTitle ?? seoPageTitle(dest.name),
     description: dest.seoDescription ?? dest.description,
     path: `/destinations/${dest.slug}`,
     image: dest.coverImage,

@@ -1,7 +1,8 @@
 import { StudioShell } from "@/components/studio/StudioShell";
+import { seoPageTitle } from "@/lib/config";
 
 export const metadata = {
-  title: "Studio — Horizon Journal",
+  title: seoPageTitle("Studio"),
   robots: { index: false, follow: false },
 };
 

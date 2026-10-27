@@ -3,10 +3,11 @@ import { SectionHeading } from "@/components/animation/SectionHeading";
 import { VideoCard } from "@/components/cards/VideoCard";
 import { VideoPlayer } from "@/components/videos/VideoPlayer";
 import { getVideos } from "@/lib/data/queries";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "Videos — Horizon Journal",
+  title: seoPageTitle("Videos"),
   description: "Travel videos and cinematic journey films.",
   path: "/videos",
 });
@@ -20,7 +21,7 @@ export default async function VideosPage() {
         <SectionHeading
           label="Cinema"
           title="Video Stories"
-          subtitle="Moving images from the road — demo embeds."
+          subtitle="Helmet-cam clips, timelapses, and ride-day edits from recent routes."
         />
 
         {videos.length > 0 && videos[0].embedUrl && (

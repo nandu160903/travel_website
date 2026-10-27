@@ -9,27 +9,27 @@ const SLIDE_INTERVAL_MS = 7000;
 const defaultSlides = [
   {
     image:
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=2400&q=85",
-    title: "ADVENTURE",
-    subtitle: "A personal log of mountains, miles, and quiet mornings outdoors.",
+      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2400&q=85",
+    title: "NORMAD",
+    subtitle: "Motorcycle miles across India — passes, ghats, and open highway.",
   },
   {
     image:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2400&q=85",
-    title: "EXPLORE",
-    subtitle: "Trails I walked, wrong turns included — written down so I remember.",
+    title: "HIGH PASSES",
+    subtitle: "Thin air, slow lines, and the relief of a warm cup at the top.",
   },
   {
     image:
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2400&q=85",
-    title: "SUMMIT",
-    subtitle: "High points from recent trips, one ridge line at a time.",
+    title: "OPEN ROAD",
+    subtitle: "Wrong turns that become the best stories — logged here as they happened.",
   },
   {
     image:
       "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=2400&q=85",
-    title: "WILDERNESS",
-    subtitle: "Lessons learned where cell service ends and the sky feels wider.",
+    title: "TWO WHEELS",
+    subtitle: "Where cell service fades and the ride is the whole point.",
   },
 ];
 

@@ -17,9 +17,9 @@ interface FooterProps {
 }
 
 export function Footer({
-  siteTitle = "Horizon",
+  siteTitle = "Normad on two wheels",
   socialLinks = [],
-  contactEmail = "hello@example.com",
+  contactEmail = "battlegroundsmobileindia69@gmail.com",
 }: FooterProps) {
   return (
     <footer className="relative border-t border-border bg-tone-dark text-paper">
@@ -31,8 +31,8 @@ export function Footer({
               My trips, photos, and notes
             </h2>
             <p className="mt-6 text-paper/60 text-sm max-w-sm leading-relaxed font-sans">
-              A small corner of the internet where I keep what I saw and how it felt — not a
-              guidebook, just my own record.
+              Routes, photos, and honest notes from the saddle — not a guidebook, just my riding
+              journal.
             </p>
           </div>
 
@@ -56,7 +56,7 @@ export function Footer({
             <p className="travel-meta mb-6 text-paper/45">Elsewhere</p>
             <SocialIcons
               links={socialLinks}
-              className="mb-6 [&_a]:text-paper/55 [&_a:hover]:text-olive"
+              className="mb-6 [&_a]:text-paper/55 [&_a:hover]:text-olive [&_span]:text-paper/55 [&_a:hover_span]:text-olive"
             />
             <a
               href={`mailto:${contactEmail}`}
@@ -72,7 +72,7 @@ export function Footer({
           <p className="text-xs text-paper/45">
             © {new Date().getFullYear()} {siteTitle}. All journeys documented with care.
           </p>
-          <p className="travel-meta text-paper/35">Demo content — replace with your own</p>
+          <p className="travel-meta text-paper/35">Riding, writing, photographing.</p>
         </div>
       </div>
     </footer>

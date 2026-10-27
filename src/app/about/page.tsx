@@ -3,11 +3,12 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Reveal } from "@/components/animation/Reveal";
 import { Timeline } from "@/components/sections/Timeline";
 import { getSiteSettings, getTimeline, getAboutPage } from "@/lib/data/queries";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "About — Summit Journal",
-  description: "The story behind the journeys. Who I am and what travel means to me.",
+  title: seoPageTitle("About"),
+  description: "Who rides, why two wheels, and how this journal is put together.",
   path: "/about",
 });
 

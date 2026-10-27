@@ -6,21 +6,21 @@ import { Button } from "@/components/ui/Button";
 const gallery = {
   tall: {
     src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=85",
-    alt: "Mountain valley",
+    alt: "Himalayan valley from the saddle",
   },
   top: [
     {
       src: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=85",
-      alt: "Forest path",
+      alt: "Hill road through pine forest",
     },
     {
       src: "https://images.unsplash.com/photo-1476231682828-58390fbb257b?w=600&q=85",
-      alt: "Winding road",
+      alt: "Switchbacks on a mountain highway",
     },
   ],
   wide: {
     src: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800&q=85",
-    alt: "Waterfall cave",
+    alt: "Monsoon waterfall beside the road",
   },
 };
 
@@ -68,12 +68,12 @@ export function JournalSpotlight() {
               Notes from the road, kept here
             </h2>
             <p className="mt-6 text-muted text-sm md:text-base leading-relaxed">
-              This site is my personal archive — trips I took, places that changed how I see
-              things, and the photos I didn&apos;t want to lose in a camera roll.
+              This site is my riding logbook — fuel stops, pass days, monsoon detours, and the
+              photos I didn&apos;t want buried in a camera roll.
             </p>
             <p className="mt-4 text-muted text-sm md:text-base leading-relaxed">
-              Some entries are polished stories; others are rough field notes. All of it is
-              mine, shared in the open for anyone curious where the trail led.
+              Some entries are full trip reports; others are quick notes from the roadside. All of
+              it is honest mileage, shared for anyone planning a similar route.
             </p>
             <Link href="/journeys" className="inline-block mt-8">
               <Button variant="primary" className="adventure-pill px-8">

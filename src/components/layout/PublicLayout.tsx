@@ -1,7 +1,7 @@
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { getSiteSettings } from "@/lib/data/queries";
-import { getSocialLinks } from "@/lib/config";
+import { normalizeContactEmail, resolveSocialLinks } from "@/lib/config";
 
 interface PublicLayoutProps {
   children: React.ReactNode;
@@ -13,8 +13,8 @@ export async function PublicLayout({
   transparentHeader = false,
 }: PublicLayoutProps) {
   const settings = await getSiteSettings();
-  const socialLinks =
-    settings.socialLinks.length > 0 ? settings.socialLinks : getSocialLinks();
+  const socialLinks = resolveSocialLinks(settings.socialLinks);
+  const contactEmail = normalizeContactEmail(settings.email);
 
   return (
     <>
@@ -28,7 +28,7 @@ export async function PublicLayout({
       <Footer
         siteTitle={settings.siteTitle}
         socialLinks={socialLinks}
-        contactEmail={settings.email}
+        contactEmail={contactEmail}
       />
     </>
   );

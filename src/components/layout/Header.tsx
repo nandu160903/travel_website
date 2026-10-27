@@ -24,7 +24,7 @@ interface HeaderProps {
 }
 
 export function Header({
-  siteTitle = "Horizon",
+  siteTitle = "Normad on two wheels",
   socialLinks: _socialLinks = [],
   transparent = false,
   heroImage,

@@ -16,8 +16,8 @@ import { sanitizeCmsHtml } from "@/lib/sanitizeCmsHtml";
 import { isSupabaseConfigured } from "@/lib/utils";
 
 async function getSupabase() {
-  const { createClient } = await import("@/lib/supabase/server");
-  return createClient();
+  const { createStudioSupabaseClient } = await import("@/lib/supabase/studio-client");
+  return createStudioSupabaseClient();
 }
 
 export async function persistDestination(input: Partial<Destination> & { slug: string; name: string; country: string }) {

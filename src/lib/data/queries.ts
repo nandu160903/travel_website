@@ -24,6 +24,7 @@ import {
   mapVideo,
   mapMapLocation,
 } from "./mappers";
+import { normalizeContactEmail } from "@/lib/config";
 import { mapLocationsFromContent, mergeMapLocations } from "./map-locations";
 import {
   demoAboutPage,
@@ -38,6 +39,10 @@ import {
   demoTrips,
   demoVideos,
 } from "./demo";
+
+function withPublicContact(settings: SiteSettings): SiteSettings {
+  return { ...settings, email: normalizeContactEmail(settings.email) };
+}
 
 async function getSupabaseClient() {
   if (!isSupabaseConfigured()) return null;
@@ -59,17 +64,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   const supabase = await getSupabaseClient();
   if (!supabase) {
     const store = await getActiveCmsStore();
-    return store?.siteSettings ?? demoSettings;
+    return withPublicContact(store?.siteSettings ?? demoSettings);
   }
 
   const { data } = await supabase.from("site_settings").select("*").single();
   if (!data) {
     const store = await getActiveCmsStore();
-    if (store?.siteSettings) return store.siteSettings;
-    return demoSettings;
+    if (store?.siteSettings) return withPublicContact(store.siteSettings);
+    return withPublicContact(demoSettings);
   }
 
-  return {
+  return withPublicContact({
     siteTitle: data.site_title,
     siteDescription: data.site_description,
     bio: data.bio,
@@ -80,7 +85,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     socialLinks: data.social_links ?? [],
     seoDefaults: data.seo_defaults ?? demoSettings.seoDefaults,
     featuredDestinationIds: data.featured_destination_ids ?? [],
-  };
+  });
 }
 
 export async function getDestinations(): Promise<Destination[]> {

@@ -2,12 +2,12 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { SectionHeading } from "@/components/animation/SectionHeading";
 import { TravelMap } from "@/components/map/TravelMap";
 import { getMapLocations } from "@/lib/data/queries";
-import { getMapboxToken } from "@/lib/config";
+import { getMapboxToken, seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "Map — Horizon Journal",
-  description: "Interactive map of all documented travel destinations and journeys.",
+  title: seoPageTitle("Map"),
+  description: "Pins for every documented ride — regions, cities, and trip highlights across India.",
   path: "/map",
 });
 

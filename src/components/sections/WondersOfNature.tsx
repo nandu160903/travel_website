@@ -23,7 +23,7 @@ export function WondersOfNature({ destinations }: WondersOfNatureProps) {
                 Places I&apos;ve Documented
               </h2>
               <p className="mt-4 text-muted text-sm md:text-base leading-relaxed">
-                Corners of the world that show up again and again in my journals and photo rolls.
+                Regions I keep riding back to — Ladakh, the Himalayas, desert highways, and the Ghats.
               </p>
             </div>
             <Link

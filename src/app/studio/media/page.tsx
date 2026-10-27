@@ -13,13 +13,27 @@ interface MediaItem {
   uploadedAt: string;
 }
 
-const demoMedia: MediaItem[] = [
-  { id: "1", url: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80", filename: "kyoto-bamboo.jpg", width: 1200, height: 1600, uploadedAt: "2025-10-05" },
-  { id: "2", url: "https://images.unsplash.com/photo-1504829857797-ddff29c27927?w=400&q=80", filename: "iceland-aurora.jpg", width: 1600, height: 1200, uploadedAt: "2025-03-15" },
+const initialMedia: MediaItem[] = [
+  {
+    id: "1",
+    url: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&q=80",
+    filename: "manali-leh-highway.jpg",
+    width: 1600,
+    height: 1200,
+    uploadedAt: "2025-06-12",
+  },
+  {
+    id: "2",
+    url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+    filename: "spiti-valley-camp.jpg",
+    width: 1200,
+    height: 1600,
+    uploadedAt: "2025-09-03",
+  },
 ];
 
 export default function StudioMediaPage() {
-  const [media, setMedia] = useState(demoMedia);
+  const [media, setMedia] = useState(initialMedia);
   const [search, setSearch] = useState("");
   const [uploading, setUploading] = useState(false);
 

@@ -107,7 +107,7 @@ export function MobileMenu({ open, onClose, socialLinks, backgroundImage }: Mobi
             <SocialIcons
               links={socialLinks}
               size="md"
-              className="justify-center [&_a]:text-tone-light/60 [&_a:hover]:text-trail"
+              className="justify-center [&_a]:text-tone-light/60 [&_a:hover]:text-trail [&_span]:text-tone-light/60 [&_a:hover_span]:text-trail"
             />
           </div>
         </motion.div>

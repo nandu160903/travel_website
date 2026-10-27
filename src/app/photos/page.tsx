@@ -2,10 +2,11 @@ import { PhotosGallery } from "@/components/gallery/PhotosGallery";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { SectionHeading } from "@/components/animation/SectionHeading";
 import { getPhotos } from "@/lib/data/queries";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "Photos — Horizon Journal",
+  title: seoPageTitle("Photos"),
   description: "Travel photography from journeys around the world.",
   path: "/photos",
 });
@@ -19,7 +20,7 @@ export default async function PhotosPage() {
         <SectionHeading
           label="Gallery"
           title="Photo Stories"
-          subtitle="Cinematic travel photography — demo images, ready to replace."
+          subtitle="Frames from high passes, desert highways, and chai stops along the way."
         />
         <PhotosGallery photos={photos} />
       </section>

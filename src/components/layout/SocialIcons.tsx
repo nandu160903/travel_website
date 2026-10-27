@@ -1,5 +1,6 @@
 "use client";
 
+import { instagramDisplayLabel } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import type { SocialLink } from "@/types";
 import { motion } from "motion/react";
@@ -50,6 +51,23 @@ function SocialIcon({ platform }: { platform: SocialLink["platform"] }) {
   return icons[platform];
 }
 
+function InstagramLabel({ url, muted }: { url: string; muted?: boolean }) {
+  return (
+    <span
+      className={cn(
+        "text-sm font-coords tracking-wide",
+        muted ? "text-muted/35" : "text-inherit"
+      )}
+    >
+      {instagramDisplayLabel(url)}
+    </span>
+  );
+}
+
+function instagramRowClass(size: "sm" | "md") {
+  return cn("inline-flex items-center gap-2.5", size === "md" && "py-1");
+}
+
 interface SocialIconsProps {
   links: SocialLink[];
   className?: string;
@@ -61,24 +79,59 @@ export function SocialIcons({ links, className, size = "sm" }: SocialIconsProps)
 
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      {links.map((link) => (
-        <motion.a
-          key={link.platform}
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={platformLabels[link.platform]}
-          title={platformLabels[link.platform]}
-          whileHover={{ scale: 1.15, rotate: 5 }}
-          whileTap={{ scale: 0.95 }}
-          className={cn(
-            "text-muted hover:text-ocean transition-colors duration-300",
-            size === "md" && "p-2"
-          )}
-        >
-          <SocialIcon platform={link.platform} />
-        </motion.a>
-      ))}
+      {links.map((link) => {
+        const label = platformLabels[link.platform];
+        const isPlaceholder = !link.url.trim();
+
+        const showInstagramText = link.platform === "instagram";
+
+        if (isPlaceholder) {
+          return (
+            <span
+              key={link.platform}
+              aria-label={`${label} — add your profile URL in Studio or NEXT_PUBLIC_INSTAGRAM_URL`}
+              title="Add Instagram: set NEXT_PUBLIC_INSTAGRAM_URL in .env or Studio → Settings"
+              className={cn(
+                instagramRowClass(size),
+                "text-muted/35 cursor-default",
+                size === "md" && "px-2"
+              )}
+            >
+              <SocialIcon platform={link.platform} />
+              {showInstagramText && <InstagramLabel url="" muted />}
+            </span>
+          );
+        }
+
+        const content = (
+          <>
+            <SocialIcon platform={link.platform} />
+            {showInstagramText && <InstagramLabel url={link.url} />}
+          </>
+        );
+
+        return (
+          <motion.a
+            key={link.platform}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={
+              showInstagramText ? instagramDisplayLabel(link.url) : label
+            }
+            title={showInstagramText ? instagramDisplayLabel(link.url) : label}
+            whileHover={showInstagramText ? { scale: 1.02 } : { scale: 1.15, rotate: 5 }}
+            whileTap={{ scale: 0.98 }}
+            className={cn(
+              "text-muted hover:text-ocean transition-colors duration-300",
+              showInstagramText && instagramRowClass(size),
+              !showInstagramText && size === "md" && "p-2"
+            )}
+          >
+            {content}
+          </motion.a>
+        );
+      })}
     </div>
   );
 }

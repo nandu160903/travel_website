@@ -12,7 +12,7 @@ import {
 } from "@/lib/data/queries";
 import { formatDate, formatCoordinates, absoluteUrl } from "@/lib/utils";
 import { createMetadata, storyJsonLd, breadcrumbJsonLd } from "@/lib/seo/metadata";
-import { getSocialLinks } from "@/lib/config";
+import { resolveSocialLinks, seoPageTitle } from "@/lib/config";
 import { sanitizeCmsHtml } from "@/lib/sanitizeCmsHtml";
 
 interface StoryPageProps {
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: StoryPageProps) {
   if (!story) return {};
 
   return createMetadata({
-    title: story.seoTitle ?? `${story.title} — Horizon Journal`,
+    title: story.seoTitle ?? seoPageTitle(story.title),
     description: story.seoDescription ?? story.excerpt,
     path: `/stories/${story.slug}`,
     image: story.ogImage ?? story.coverImage,
@@ -44,8 +44,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
     getSiteSettings(),
   ]);
 
-  const socialLinks =
-    settings.socialLinks.length > 0 ? settings.socialLinks : getSocialLinks();
+  const socialLinks = resolveSocialLinks(settings.socialLinks);
   const shareUrl = absoluteUrl(`/stories/${story.slug}`);
 
   const jsonLd = [

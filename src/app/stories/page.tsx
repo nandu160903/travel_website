@@ -3,12 +3,13 @@ import { SectionHeading } from "@/components/animation/SectionHeading";
 import { StoryCard } from "@/components/cards/StoryCard";
 import { StoriesFilter } from "@/components/stories/StoriesFilter";
 import { getStories } from "@/lib/data/queries";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 import type { StoryCategory } from "@/types";
 
 export const metadata = createMetadata({
-  title: "Stories — Horizon Journal",
-  description: "Travel stories from journeys around the world.",
+  title: seoPageTitle("Stories"),
+  description: "Long-form road notes from motorcycle trips across India.",
   path: "/stories",
 });
 
@@ -26,7 +27,7 @@ export default async function StoriesPage({ searchParams }: StoriesPageProps) {
         <SectionHeading
           label="Journal"
           title="Travel Stories"
-          subtitle="Narratives from the road — demo content, ready to replace."
+          subtitle="Pass reports, monsoon rides, and the stories that only make sense after a hot meal at a dhaba."
         />
         <StoriesFilter activeCategory={category} />
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 mt-12">

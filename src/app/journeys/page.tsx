@@ -3,11 +3,12 @@ import { SectionHeading } from "@/components/animation/SectionHeading";
 import { TripCard } from "@/components/cards/TripCard";
 import { Timeline } from "@/components/sections/Timeline";
 import { getTrips, getTimeline } from "@/lib/data/queries";
+import { seoPageTitle } from "@/lib/config";
 import { createMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createMetadata({
-  title: "Journeys — Horizon Journal",
-  description: "Chronological travel journeys and trips documented.",
+  title: seoPageTitle("Journeys"),
+  description: "Chronological motorcycle trips — dates, routes, and notes from the saddle.",
   path: "/journeys",
 });
 
