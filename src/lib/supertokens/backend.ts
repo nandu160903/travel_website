@@ -5,9 +5,17 @@ import type { TypeInput } from "supertokens-node/types";
 import { appInfo } from "./appInfo";
 import {
   extractLoginEmail,
+  getConfiguredAdminEmail,
   getSuperTokensConnectionURI,
   resolveIsAdmin,
 } from "./admin";
+
+function signUpAllowedForEmail(email: string | undefined): boolean {
+  const adminEmail = getConfiguredAdminEmail();
+  if (!adminEmail) return false;
+  if (!email) return false;
+  return email.trim().toLowerCase() === adminEmail;
+}
 
 export const backendConfig = (): TypeInput => ({
   framework: "custom",
@@ -33,6 +41,12 @@ export const backendConfig = (): TypeInput => ({
           },
           signUpPOST: async (input) => {
             const email = extractLoginEmail(input.formFields);
+            if (!signUpAllowedForEmail(email)) {
+              return {
+                status: "GENERAL_ERROR",
+                message: "Registration is limited to the configured site admin email.",
+              };
+            }
             if (!original.signUpPOST) {
               return { status: "GENERAL_ERROR", message: "Sign up is unavailable." };
             }

@@ -11,7 +11,12 @@ import { studioPagePath } from "@/lib/studio/paths";
 
 type Mode = "signin" | "signup";
 
-export function AdminAuthForm() {
+interface AdminAuthFormProps {
+  /** When false, only sign-in is shown (set after ADMIN_USER_ID is configured). */
+  allowRegistration?: boolean;
+}
+
+export function AdminAuthForm({ allowRegistration = true }: AdminAuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = safeRedirectPath(searchParams.get("redirectTo"), studioPagePath());
@@ -128,31 +133,33 @@ export function AdminAuthForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-xs text-muted">
-        {mode === "signin" ? (
-          <>
-            First time here?{" "}
-            <button
-              type="button"
-              className="text-olive hover:underline"
-              onClick={() => setMode("signup")}
-            >
-              Register admin
-            </button>
-          </>
-        ) : (
-          <>
-            Already registered?{" "}
-            <button
-              type="button"
-              className="text-olive hover:underline"
-              onClick={() => setMode("signin")}
-            >
-              Sign in
-            </button>
-          </>
-        )}
-      </p>
+      {allowRegistration && (
+        <p className="mt-6 text-center text-xs text-muted">
+          {mode === "signin" ? (
+            <>
+              First time here?{" "}
+              <button
+                type="button"
+                className="text-olive hover:underline"
+                onClick={() => setMode("signup")}
+              >
+                Register admin
+              </button>
+            </>
+          ) : (
+            <>
+              Already registered?{" "}
+              <button
+                type="button"
+                className="text-olive hover:underline"
+                onClick={() => setMode("signin")}
+              >
+                Sign in
+              </button>
+            </>
+          )}
+        </p>
+      )}
 
       <p className="mt-8 text-center">
         <Link href="/" className="text-xs text-muted hover:text-foreground">

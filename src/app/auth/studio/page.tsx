@@ -7,10 +7,12 @@ export const metadata = {
 };
 
 export default function StudioAuthPage() {
+  const allowRegistration = !process.env.ADMIN_USER_ID?.trim();
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-24">
       <Suspense fallback={<div className="text-muted text-sm">Loading...</div>}>
-        <AdminAuthForm />
+        <AdminAuthForm allowRegistration={allowRegistration} />
       </Suspense>
     </div>
   );
