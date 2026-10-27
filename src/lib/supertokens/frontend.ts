@@ -3,7 +3,7 @@
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import Session from "supertokens-auth-react/recipe/session";
 import type { SuperTokensConfig } from "supertokens-auth-react/lib/build/types";
-import { appInfo } from "./appInfo";
+import { getClientAppInfo } from "./appInfo";
 
 type Router = {
   push: (href: string) => void;
@@ -17,7 +17,7 @@ export function setSuperTokensRouter(router: Router, pathName: string) {
 }
 
 export const frontendConfig = (): SuperTokensConfig => ({
-  appInfo,
+  appInfo: getClientAppInfo(),
   recipeList: [EmailPassword.init(), Session.init()],
   windowHandler: (orig) => ({
     ...orig,

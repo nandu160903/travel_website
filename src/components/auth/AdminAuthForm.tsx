@@ -33,7 +33,14 @@ export function AdminAuthForm({ allowRegistration = true }: AdminAuthFormProps) 
   const [loading, setLoading] = useState(false);
 
   const finishAuth = async () => {
-    const res = await fetch("/api/auth/me");
+    const res = await fetch("/api/auth/me", { credentials: "include" });
+    if (!res.ok) {
+      throw new Error(
+        res.status === 500
+          ? "Session check failed on the server. Confirm SUPERTOKENS_CONNECTION_URI and site URL env vars on Vercel."
+          : `Session check failed (${res.status}).`
+      );
+    }
     const data = await res.json();
 
     if (!data.isAdmin) {
@@ -71,14 +78,29 @@ export function AdminAuthForm({ allowRegistration = true }: AdminAuthFormProps) 
         return;
       }
 
+      if (response.status === "WRONG_CREDENTIALS_ERROR") {
+        setError("Wrong email or password.");
+        return;
+      }
+
       if (response.status !== "OK") {
-        setError("Authentication failed. Check your credentials.");
+        const msg =
+          "message" in response && typeof response.message === "string"
+            ? response.message
+            : "Authentication failed. Check your credentials.";
+        setError(msg);
         return;
       }
 
       await finishAuth();
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setError(
+        message.includes("Failed to fetch") || message.includes("NetworkError")
+          ? "Could not reach /api/auth. Check NEXT_PUBLIC_APP_URL on Vercel matches this site URL, then redeploy."
+          : message
+      );
     } finally {
       setLoading(false);
     }
